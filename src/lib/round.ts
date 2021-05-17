@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {SeatIndex} from 'types/seat-index';
+import { SeatIndex } from 'types/seat-index';
 
 export enum Action {
     LEAVE = 1 << 0,

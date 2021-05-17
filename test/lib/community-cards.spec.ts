@@ -1,7 +1,7 @@
 import CommunityCards from "../../src/lib/community-cards";
 import Card, {CardRank, CardSuit} from "../../src/lib/card";
 
-describe('Community Cards', () => {
+describe('Community cards', () => {
     let communityCards: CommunityCards
 
     beforeEach(() => {
