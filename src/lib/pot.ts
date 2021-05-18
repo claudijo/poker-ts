@@ -2,6 +2,8 @@ import assert from 'assert'
 import { SeatIndex } from 'types/seat-index'
 import { Chips } from 'types/chips'
 import { SeatArray } from 'types/seat-array'
+import Player from './player'
+
 
 export default class Pot {
     private _eligiblePlayers: Array<SeatIndex> = []
@@ -27,38 +29,30 @@ export default class Pot {
             // If no players have bet, just make all the players who are still in the pot eligible.
             // It is possible that some player has folded even if nobody has bet.
             // We would not want to keep him as an eligible player.
-            this._eligiblePlayers = []
-            for (let index = 0; index < players.length; index++) {
-                if (players[index] !== null) {
-                    this._eligiblePlayers.push(index)
-                }
-            }
+            this._eligiblePlayers = players.reduce((acc: Array<SeatIndex>, player:Player | null, index: SeatIndex) => {
+                if (player !== null) acc.push(index)
+                return acc;
+            }, [])
 
             return 0;
         } else {
             // Find the smallest player bet on the table.
-            const player = players[firstBetterIndex];
-            assert(player !== null)
-            let minBet = player.betSize()
-            assert(minBet !== undefined)
-
-            for (let index = firstBetterIndex; index < players.length; index++) {
-                const player = players[index];
-                if (player !== null && player.betSize() !== 0 && player.betSize() < minBet) {
-                    minBet = player.betSize()
-                }
-            }
+            const firstBetter = players[firstBetterIndex]
+            assert(firstBetter !== null)
+            const minBet = players.slice(firstBetterIndex + 1).reduce((acc: Chips, player: Player | null ) => {
+                if (player !== null && player.betSize() !== 0 && player.betSize() < acc) acc = player.betSize()
+                return acc;
+            }, firstBetter.betSize())
 
             // Deduct that bet from all the players, and add it to the pot.
             this._eligiblePlayers = []
-            for (let index = 0; index < players.length; index++) {
-                const player = players[index];
+            players.forEach((player, index) => {
                 if (player !== null && player.betSize() !== 0) {
                     player.takeFromBet(minBet);
                     this._size += minBet;
                     this._eligiblePlayers.push(index);
                 }
-            }
+            })
 
             return minBet;
         }
