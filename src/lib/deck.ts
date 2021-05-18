@@ -15,13 +15,9 @@ export default class Deck {
 
     constructor() {
         this._size = 52
-        const firstSuite = CardSuit.CLUBS
-        const lastSuite = CardSuit.SPADES
-        const firstRank = CardRank._2
-        const lastRank = CardRank.A
         let index = 0
-        for (let suit = firstSuite; suit <= lastSuite; suit++) {
-            for (let rank = firstRank; rank <= lastRank; rank++) {
+        for (let suit = CardSuit.CLUBS; suit <= CardSuit.SPADES; suit++) {
+            for (let rank = CardRank._2; rank <= CardRank.A; rank++) {
                 this._cards[index++] = new Card(rank, suit)
             }
         }
@@ -42,5 +38,4 @@ export default class Deck {
     size(): number {
         return this._size
     }
-
 }
