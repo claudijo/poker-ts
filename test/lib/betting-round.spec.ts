@@ -1,8 +1,7 @@
 import BettingRound, { Action as BettingRoundAction } from '../../src/lib/betting-round'
 import { SeatArray } from '../../src/types/seat-array'
 import Player from '../../src/lib/player'
-import Round, { Action as RoundAction} from '../../src/lib/round'
-import exp = require('constants')
+import Round, { Action as RoundAction } from '../../src/lib/round'
 
 describe('Betting round', () => {
     describe('testing valid actions', () => {

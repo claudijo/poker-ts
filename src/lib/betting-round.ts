@@ -4,16 +4,14 @@ import { SeatIndex } from 'types/seat-index'
 import { Chips } from 'types/chips'
 import Round, { Action as RoundAction } from './round'
 import { SeatArray } from 'types/seat-array'
+import { ActionRange } from 'types/action-range'
 
+// TODO: See https://stackoverflow.com/questions/32509056/can-you-set-a-static-enum-inside-of-a-typescript-class
+//  for somewhat more convenient way to export static enum
 export enum Action {
     LEAVE,
     MATCH,
     RAISE
-}
-
-export type ActionRange = {
-    canRaise: boolean,
-    chipRange?: ChipRange
 }
 
 export default class BettingRound {
@@ -56,6 +54,10 @@ export default class BettingRound {
 
     activePlayers(): Array<boolean> {
         return this._round.activePlayers()
+    }
+
+    numActivePlayers(): number {
+        return this._round.numActivePlayers()
     }
 
     legalActions(): ActionRange {

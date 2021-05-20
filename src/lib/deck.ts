@@ -1,41 +1,32 @@
 import { randomInt } from 'crypto'
 import assert from 'assert'
 import Card, { CardRank, CardSuit } from './card'
+import { shuffleInPlace } from '../util/array'
 
-export default class Deck {
-    private _cards: Array<Card> = []
+export default class Deck extends Array<Card> {
     private _size: number
 
-    static shuffle (array: Array<any>): void {
-        for (let index = array.length - 1; index > 0; index--) {
-            const newIndex = randomInt(index + 1);
-            [array[index], array[newIndex]] = [array[newIndex], array[index]];
-        }
-    }
-
     constructor() {
+        super()
+
         this._size = 52
         let index = 0
         for (let suit = CardSuit.CLUBS; suit <= CardSuit.SPADES; suit++) {
             for (let rank = CardRank._2; rank <= CardRank.A; rank++) {
-                this._cards[index++] = new Card(rank, suit)
+                this[index++] = new Card(rank, suit)
             }
         }
 
-        Deck.shuffle(this._cards)
+        shuffleInPlace(this)
     }
 
     fillAndShuffle(): void {
         this._size = 52;
-        Deck.shuffle(this._cards)
+        shuffleInPlace(this)
     }
 
     draw(): Card {
         assert(this._size > 0, 'Cannot draw from an empty deck')
-        return this._cards[--this._size]
-    }
-
-    size(): number {
-        return this._size
+        return this[--this._size]
     }
 }
