@@ -2,10 +2,10 @@ import assert from 'assert';
 import Card from "./card";
 
 export enum RoundOfBetting {
-    PREFLOP,
-    FLOP,
-    TURN,
-    RIVER,
+    PREFLOP = 0,
+    FLOP = 3,
+    TURN = 4,
+    RIVER = 5,
 }
 
 export const next = (roundOfBetting: RoundOfBetting): RoundOfBetting => {

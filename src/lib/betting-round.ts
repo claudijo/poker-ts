@@ -48,7 +48,7 @@ export default class BettingRound {
 
     players(): SeatArray {
         return this._round.activePlayers().map((isActive, index) => {
-            return this._players[index] || null
+            return isActive ? this._players[index] : null
         })
     }
 

@@ -1,3 +1,4 @@
+/*
 import assert from 'assert'
 import Player from './player'
 
@@ -28,5 +29,5 @@ export default class SeatArray extends Array {
     }
 
 
-
 }
+ */

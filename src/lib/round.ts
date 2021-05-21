@@ -19,7 +19,7 @@ export default class Round {
         this._activePlayers = activePlayers
         this._playerToAct = firstToAct;
         this._lastAggressiveActor = firstToAct;
-        this._numActivePlayers = activePlayers.filter(player => player).length;
+        this._numActivePlayers = activePlayers.filter(player => !!player).length;
 
         assert(firstToAct < activePlayers.length)
     }
@@ -41,13 +41,18 @@ export default class Round {
     }
 
     inProgress(): boolean {
+        // console.log('In progress', this._contested, this._numActivePlayers, this._firstAction, this._playerToAct !== this._lastAggressiveActor)
         return (this._contested || this._numActivePlayers > 1) && (this._firstAction || this._playerToAct !== this._lastAggressiveActor);
     }
 
     actionTaken(action: Action): void {
         assert(this.inProgress())
         assert(!(action & Action.PASSIVE && action & Action.AGGRESSIVE))
-        if (this._firstAction) this._firstAction = false;
+
+        if (this._firstAction) {
+            this._firstAction = false;
+        }
+
         // Implication: if there is aggressive action => the next player is contested
         if (action & Action.AGGRESSIVE) {
             this._lastAggressiveActor = this._playerToAct;
@@ -55,6 +60,7 @@ export default class Round {
         } else if (action & Action.PASSIVE) {
             this._contested = true;
         }
+
         if (action & Action.LEAVE) {
             this._activePlayers[this._playerToAct] = false;
             --this._numActivePlayers;

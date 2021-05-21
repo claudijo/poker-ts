@@ -9,6 +9,10 @@ export default class Deck extends Array<Card> {
     constructor() {
         super()
 
+        // Set the prototype explicitly.
+        // See https://github.com/Microsoft/TypeScript/wiki/FAQ#why-doesnt-extending-built-ins-like-error-array-and-map-work
+        Object.setPrototypeOf(this, Deck.prototype);
+
         this._size = 52
         let index = 0
         for (let suit = CardSuit.CLUBS; suit <= CardSuit.SPADES; suit++) {

@@ -23,7 +23,7 @@ export class ActionRange {
         this.chipRange = chipRange
     }
 
-    contains(action: Action, bet: Chips): boolean {
+    contains(action: Action, bet: Chips = 0): boolean {
         assert(Dealer.isValid(action), 'The action representation must be valid')
         return action && Dealer.isAggressive(action)
             ? this.chipRange?.contains(bet) ?? false
@@ -92,8 +92,7 @@ export default class Dealer {
     }
 
     players(): SeatArray {
-        assert(this._bettingRound !== null)
-        return this._bettingRound.players()
+        return this._bettingRound?.players() ?? []
     }
 
     // All the players who started in the current betting round
@@ -107,18 +106,15 @@ export default class Dealer {
     }
 
     numActivePlayers(): number {
-        assert(this._bettingRound !== null)
-        return this._bettingRound.numActivePlayers()
+        return this._bettingRound?.numActivePlayers() ?? 0
     }
 
     biggestBet(): Chips {
-        assert(this._bettingRound !== null)
-        return this._bettingRound.biggestBet()
+        return this._bettingRound?.biggestBet() ?? 0
     }
 
     bettingRoundInProgress(): boolean {
-        assert(this._bettingRound !== null)
-        return this._bettingRound.inProgress()
+        return this._bettingRound?.inProgress() ?? false
     }
 
     legalActions(): ActionRange {
@@ -131,7 +127,7 @@ export default class Dealer {
         // Below we take care of differentiating between check/call and bet/raise,
         // which the betting_round treats as just "match" and "raise".
         assert(player !== null)
-        if (this._bettingRound.biggestBet() - player.betSize()) {
+        if (this._bettingRound.biggestBet() - player.betSize() === 0) {
             actionRange.action |= Action.CHECK
             assert(actions.canRaise) // If you can check, you can always bet or raise.
 
@@ -174,13 +170,13 @@ export default class Dealer {
         this.collectAnte()
         const firstAction = this.nextOrWrap(this.postBlinds())
         this.dealHoleCards()
-        if (this._players.filter(player => player?.stack() ?? 0 !== 0).length > 1) {
+        if (this._players.filter(player => player !== null && player.stack() !== 0).length > 1) {
             this._bettingRound = new BettingRound([...this._players], firstAction, this._forcedBets.blinds.big, this._forcedBets.blinds.big)
         }
         this._handInProgress = true
     }
 
-    actionTaken(action: Action, bet: Chips): void {
+    actionTaken(action: Action, bet?: Chips): void {
         assert(this.bettingRoundInProgress(), 'Betting round must be in progress')
         assert(this.legalActions().contains(action, bet), 'Action must be legal')
         assert(this._bettingRound !== null)
@@ -203,10 +199,9 @@ export default class Dealer {
     endBettingRound(): void {
         assert(!this._bettingRoundsCompleted, 'Betting rounds must not be completed')
         assert(!this.bettingRoundInProgress(), 'Betting round must not be in progress')
-        assert(this._bettingRound !== null)
 
         this._potManager.collectBetsForm(this._players)
-        if (this._bettingRound.numActivePlayers() <= 1) {
+        if ((this._bettingRound?.numActivePlayers() ?? 0) <= 1) {
             this._roundOfBetting = RoundOfBetting.RIVER
             // If there is only one pot, and there is only one player in it...
             if (this._potManager.pots().length === 1 && this._potManager.pots()[0].eligiblePlayers().length === 1) {
@@ -219,7 +214,7 @@ export default class Dealer {
         } else if (this._roundOfBetting < RoundOfBetting.RIVER) {
             // Start the next betting round.
             this._roundOfBetting = next(this._roundOfBetting)
-            this._players = this._bettingRound.players()
+            this._players = this._bettingRound?.players() ?? []
             this._bettingRound = new BettingRound([...this._players], this.nextOrWrap(this._button), this._forcedBets.blinds.big)
             this.dealCommunityCards()
             assert(this._bettingRoundsCompleted === false)
@@ -230,7 +225,7 @@ export default class Dealer {
         }
     }
 
-    showDown(): void {
+    showdown(): void {
         assert(this._roundOfBetting === RoundOfBetting.RIVER, 'Round of betting must be river')
         assert(!this.bettingRoundInProgress(), 'Betting round must not be in progress')
         assert(this.bettingRoundsCompleted(), 'Betting rounds must be completed')
@@ -295,7 +290,7 @@ export default class Dealer {
     }
 
     private collectAnte(): void {
-        if (this._forcedBets.ante === 0) {
+        if (this._forcedBets.ante === undefined) {
             return
         }
 
@@ -315,14 +310,16 @@ export default class Dealer {
     private postBlinds(): SeatIndex {
         let seat = this._button
         const numPlayers = this._players.filter(player => player !== null).length
-        if (numPlayers !== 2) seat = this.nextOrWrap(seat)
-        const bigBlind = this._players[seat]
-        assert(bigBlind !== null)
-        bigBlind.bet(Math.min(this._forcedBets.blinds.big, bigBlind.totalChips()))
-        seat = this.nextOrWrap(seat)
+        if (numPlayers !== 2) {
+            seat = this.nextOrWrap(seat)
+        }
         const smallBlind = this._players[seat]
         assert(smallBlind !== null)
         smallBlind.bet(Math.min(this._forcedBets.blinds.small, smallBlind.totalChips()))
+        seat = this.nextOrWrap(seat)
+        const bigBlind = this._players[seat]
+        assert(bigBlind !== null)
+        bigBlind.bet(Math.min(this._forcedBets.blinds.big, bigBlind.totalChips()))
         return seat
     }
 
