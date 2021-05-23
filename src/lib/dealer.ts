@@ -10,7 +10,7 @@ import { HoleCards } from 'types/hole-cards'
 import PotManager from './pot-manager'
 import assert from 'assert'
 import Pot from './pot'
-import Hand from './hand'
+import Hand, { HandRanking } from './hand'
 import { findIndexAdjacent, nextOrWrap } from '../util/array'
 import Card from './card'
 
@@ -243,8 +243,8 @@ export default class Dealer {
         }
 
         for (const pot of this._potManager.pots()) {
-            const playerResults = pot.eligiblePlayers().map(seatIndex => {
-                return [seatIndex, new Hand(this._holeCards[seatIndex], this._communityCards)]
+            const playerResults: Array<[SeatIndex, Hand]> = pot.eligiblePlayers().map(seatIndex => {
+                return [seatIndex, Hand.create(this._holeCards[seatIndex], this._communityCards)]
             })
 
             playerResults.sort(([, lhs], [, rhs]) => Hand.compare(lhs, rhs))

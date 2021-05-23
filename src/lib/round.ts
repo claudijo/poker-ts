@@ -41,7 +41,6 @@ export default class Round {
     }
 
     inProgress(): boolean {
-        // console.log('In progress', this._contested, this._numActivePlayers, this._firstAction, this._playerToAct !== this._lastAggressiveActor)
         return (this._contested || this._numActivePlayers > 1) && (this._firstAction || this._playerToAct !== this._lastAggressiveActor);
     }
 

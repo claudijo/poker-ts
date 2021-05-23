@@ -5,28 +5,12 @@ export default class Card {
     rank: CardRank
     suit: CardSuit
 
-    static eq(lhs: Card, rhs: Card): boolean {
-        return lhs.rank === rhs.rank && lhs.suit === rhs.suit
-    }
-
-    static ne(lhs: Card, rhs: Card): boolean {
-        return !Card.eq(lhs, rhs)
-    }
-
-    static lt(lhs: Card, rhs: Card): boolean {
-        return lhs.rank < rhs.rank
-    }
-
-    static gt(lhs: Card, rhs: Card): boolean {
-        return lhs.rank > rhs.rank
-    }
-
-    static lte(lhs: Card, rhs: Card): boolean {
-        return !Card.gt(lhs, rhs);
-    }
-
-    static gte(lhs: Card, rhs: Card): boolean {
-        return !Card.lt(lhs, rhs);
+    static compare(c1: Card, c2: Card) {
+        const suitDiff = c2.suit - c1.suit
+        if (suitDiff !== 0) {
+            return suitDiff
+        }
+        return c2.rank - c1.rank
     }
 
     constructor(rank: CardRank, suit: CardSuit) {

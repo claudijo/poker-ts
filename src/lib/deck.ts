@@ -1,7 +1,7 @@
 import { randomInt } from 'crypto'
 import assert from 'assert'
 import Card, { CardRank, CardSuit } from './card'
-import { shuffleInPlace } from '../util/array'
+import { shuffle } from '../util/array'
 
 export default class Deck extends Array<Card> {
     private _size: number
@@ -21,12 +21,12 @@ export default class Deck extends Array<Card> {
             }
         }
 
-        shuffleInPlace(this)
+        shuffle(this)
     }
 
     fillAndShuffle(): void {
         this._size = 52;
-        shuffleInPlace(this)
+        shuffle(this)
     }
 
     draw(): Card {

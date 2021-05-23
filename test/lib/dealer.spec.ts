@@ -389,7 +389,7 @@ describe('Dealer', () => {
             // This caused player.bet() to fail, because a smaller bet than the existing one was placed.
             // This is a design problem. If bet sizes did not outlive the dealer, accessing old ones would
             // be outside of the realm of possibility.
-            test.only('Calling on the big blind', () => {
+            test('Calling on the big blind', () => {
                 const forcedBets = { blinds: { big: 50, small: 25 } }
                 let deck = new Deck()
                 let communityCards = new CommunityCards()
