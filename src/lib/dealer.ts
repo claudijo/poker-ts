@@ -117,6 +117,10 @@ export default class Dealer {
         return this._bettingRound?.inProgress() ?? false
     }
 
+    isContested(): boolean {
+        return this._bettingRound?.isContested() ?? false
+    }
+
     legalActions(): ActionRange {
         assert(this.bettingRoundInProgress(), 'Betting round must be in progress')
         assert(this._bettingRound !== null)
@@ -333,7 +337,7 @@ export default class Dealer {
 
     // Deals community cards up until the current round of betting.
     private dealCommunityCards(): void {
-        const cards:Array<Card> = []
+        const cards: Array<Card> = []
         const numCardsToDeal = this._roundOfBetting - this._communityCards.cards().length
         for (let index = 0; index < numCardsToDeal; index++) {
             cards.push(this._deck.draw())

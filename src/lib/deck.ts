@@ -9,7 +9,7 @@ export default class Deck extends Array<Card> {
     constructor() {
         super()
 
-        // Set the prototype explicitly.
+        // Set the prototype explicitly when extending Array
         // See https://github.com/Microsoft/TypeScript/wiki/FAQ#why-doesnt-extending-built-ins-like-error-array-and-map-work
         Object.setPrototypeOf(this, Deck.prototype);
 

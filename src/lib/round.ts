@@ -44,6 +44,10 @@ export default class Round {
         return (this._contested || this._numActivePlayers > 1) && (this._firstAction || this._playerToAct !== this._lastAggressiveActor);
     }
 
+    isContested(): boolean {
+        return this._contested;
+    }
+
     actionTaken(action: Action): void {
         assert(this.inProgress())
         assert(!(action & Action.PASSIVE && action & Action.AGGRESSIVE))

@@ -8,6 +8,7 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "esModuleInterop": true,
+    "sourceMap": true,
     "baseUrl": ".",
     "paths": {
       "*": [

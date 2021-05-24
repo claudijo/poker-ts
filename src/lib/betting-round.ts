@@ -43,6 +43,10 @@ export default class BettingRound {
         return this._round.inProgress()
     }
 
+    isContested(): boolean {
+        return this._round.isContested();
+    }
+
     playerToAct(): SeatIndex {
         return this._round.playerToAct()
     }
