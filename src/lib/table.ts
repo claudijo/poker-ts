@@ -29,7 +29,7 @@ export default class Table {
     private _buttonSetManually = false // has the button been set manually
     private _button: SeatIndex = 0
     private _forcedBets: ForcedBets
-    private _deck: Deck | null = null
+    private _deck: Deck
     private _communityCards?: CommunityCards
     private _dealer?: Dealer
     private _staged: Array<boolean> // All players who took a seat or stood up before the .start_hand()
@@ -41,6 +41,7 @@ export default class Table {
         this._forcedBets = forcedBets
         this._table_players = new Array(numSeats).fill(null)
         this._staged = new Array(numSeats).fill(false)
+        this._deck = new Deck()
     }
 
     playerToAct(): SeatIndex {
@@ -112,7 +113,7 @@ export default class Table {
         this._automaticActions = new Array(this._numSeats).fill(null)
         this._handPlayers = [...this._table_players]
         this.incrementButton()
-        this._deck = new Deck()
+        this._deck.fillAndShuffle()
         this._communityCards = new CommunityCards()
         this._dealer = new Dealer(this._handPlayers, this._button, this._forcedBets, this._deck, this._communityCards)
         this._dealer.startHand()
