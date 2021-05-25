@@ -3,12 +3,11 @@
     "target": "es5",
     "module": "commonjs",
     "outDir": "dist",
-    "sourceMap": false,
+    "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "esModuleInterop": true,
-    "sourceMap": true,
     "baseUrl": ".",
     "paths": {
       "*": [
