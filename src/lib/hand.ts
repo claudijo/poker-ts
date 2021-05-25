@@ -25,9 +25,9 @@ export type RankInfo = {
 export default class Hand {
     private readonly _ranking: HandRanking
     private readonly _strength: number
-    private readonly _cards: Array<Card> /* size 5 */
+    private readonly _cards: Card[] /* size 5 */
 
-    constructor(ranking: HandRanking, strength: number, cards: Array<Card>) {
+    constructor(ranking: HandRanking, strength: number, cards: Card[]) {
         assert(cards.length === 5)
 
         this._cards = cards
@@ -44,7 +44,7 @@ export default class Hand {
         return Hand.of(cards)
     }
 
-    static of(cards: Array<Card>): Hand {
+    static of(cards: Card[]): Hand {
         assert(cards.length === 7)
         const hand1 = Hand._highLowHandEval(cards)
         const hand2 = Hand._straightFlushEval(cards)
@@ -64,7 +64,7 @@ export default class Hand {
         return h2.strength() - h1.strength()
     }
 
-    static nextRank(cards: Array<Card>): RankInfo {
+    static nextRank(cards: Card[]): RankInfo {
         assert(cards.length !== 0)
         const firstRank = cards[0].rank
         const secondRankIndex = cards.findIndex(card => card.rank !== firstRank)
@@ -74,7 +74,7 @@ export default class Hand {
         }
     }
 
-    static getStrength(cards: Array<Card>): number {
+    static getStrength(cards: Card[]): number {
         assert(cards.length === 5)
         let sum = 0
         let multiplier = Math.pow(13, 4)
@@ -94,7 +94,7 @@ export default class Hand {
 
     // If there are >=5 cards with the same suit, return a span containing all of
     // them.
-    static getSuitedCards(cards: Array<Card>): Array<Card> | null {
+    static getSuitedCards(cards: Card[]): Card[] | null {
         assert(cards.length === 7)
         cards.sort(Card.compare)
         let first = 0
@@ -118,7 +118,7 @@ export default class Hand {
     // EXPECTS: 'cards' is a descending range of cards with unique ranks.
     // Returns the subrange which contains the cards forming a straight. Ranks of
     // cards in the resulting range are r, r-1, r-2... except for the wheel.
-    static getStraightCards(cards: Array<Card>): Array<Card> | null {
+    static getStraightCards(cards: Card[]): Card[] | null {
         assert(cards.length >= 5)
         let first = 0
 
@@ -144,12 +144,12 @@ export default class Hand {
         }
     }
 
-    static _highLowHandEval(cards: Array<Card> /* size = 7 */): Hand {
+    static _highLowHandEval(cards: Card[] /* size = 7 */): Hand {
         assert(cards.length === 7)
 
         cards = [...cards]
 
-        const rankOccurrences: Array<number> = new Array(13).fill(0)
+        const rankOccurrences: number[] = new Array(13).fill(0)
         for (const card of cards) {
             rankOccurrences[card.rank] += 1
         }
@@ -192,7 +192,7 @@ export default class Hand {
         return new Hand(ranking, strength, handCards)
     }
 
-    static _straightFlushEval(cards: Array<Card>): Hand | null {
+    static _straightFlushEval(cards: Card[]): Hand | null {
         assert(cards.length === 7)
 
         cards = [...cards]
@@ -209,13 +209,13 @@ export default class Hand {
                     ranking = HandRanking.STRAIGHT_FLUSH
                     strength = straightCards[0].rank
                 }
-                const cards = straightCards.slice(0, 5)
-                return new Hand(ranking, strength, cards)
+                const handCards = straightCards.slice(0, 5)
+                return new Hand(ranking, strength, handCards)
             } else {
                 const ranking = HandRanking.FLUSH
-                const cards = suitedCards.slice(0, 5)
-                const strength = this.getStrength(cards)
-                return new Hand(ranking, strength, cards)
+                const handCards = suitedCards.slice(0, 5)
+                const strength = this.getStrength(handCards)
+                return new Hand(ranking, strength, handCards)
             }
         } else {
             cards.sort((c1, c2) => c2.rank - c1.rank)
@@ -244,7 +244,7 @@ export default class Hand {
         return this._strength
     }
 
-    cards(): Array<Card> {
+    cards(): Card[] {
         return this._cards
     }
 

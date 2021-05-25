@@ -46,7 +46,7 @@ export default class Dealer {
     private _bettingRound: BettingRound | null = null
     private _forcedBets: ForcedBets
     private _deck: Deck
-    private _holeCards: Array<HoleCards>
+    private _holeCards: HoleCards[]
     private _handInProgress: boolean = false
     private _roundOfBetting: RoundOfBetting = RoundOfBetting.PREFLOP
     private _bettingRoundsCompleted: boolean = false
@@ -154,7 +154,7 @@ export default class Dealer {
         return actionRange
     }
 
-    pots(): Array<Pot> {
+    pots(): Pot[] {
         assert(this.handInProgress(), 'Hand must be in progress')
         return this._potManager.pots()
     }
@@ -163,7 +163,7 @@ export default class Dealer {
         return this._button
     }
 
-    holeCards(): Array<HoleCards> {
+    holeCards(): HoleCards[] {
         assert(this.handInProgress() || this.bettingRoundInProgress(), 'Hand must be in progress or showdown must have ended')
         return this._holeCards
     }
@@ -248,7 +248,7 @@ export default class Dealer {
         }
 
         for (const pot of this._potManager.pots()) {
-            const playerResults: Array<[SeatIndex, Hand]> = pot.eligiblePlayers().map(seatIndex => {
+            const playerResults: [SeatIndex, Hand][] = pot.eligiblePlayers().map(seatIndex => {
                 return [seatIndex, Hand.create(this._holeCards[seatIndex], this._communityCards)]
             })
 
@@ -338,7 +338,7 @@ export default class Dealer {
 
     // Deals community cards up until the current round of betting.
     private dealCommunityCards(): void {
-        const cards: Array<Card> = []
+        const cards: Card[] = []
         const numCardsToDeal = this._roundOfBetting - this._communityCards.cards().length
         for (let index = 0; index < numCardsToDeal; index++) {
             cards.push(this._deck.draw())

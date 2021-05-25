@@ -1,14 +1,14 @@
 import { randomInt } from 'crypto'
 import assert from 'assert'
 
-export function shuffle<Type>(array: Array<Type>) {
+export function shuffle<Type>(array: Type[]) {
     for (let index = array.length - 1; index > 0; index--) {
         const newIndex = randomInt(index + 1);
         [array[index], array[newIndex]] = [array[newIndex], array[index]];
     }
 }
 
-export function findIndexAdjacent<Type>(array: Array<Type>, predicate:(first: Type, second: Type) => boolean = (first, second) => first === second): number {
+export function findIndexAdjacent<Type>(array: Type[], predicate:(first: Type, second: Type) => boolean): number {
     let first = array[0]
     for (let index = 1; index < array.length; index++) {
         const second = array[index]
@@ -21,7 +21,7 @@ export function findIndexAdjacent<Type>(array: Array<Type>, predicate:(first: Ty
     return -1
 }
 
-export function nextOrWrap<Type>(array: Array<Type | null>, currentIndex): number {
+export function nextOrWrap<Type>(array: (Type | null)[], currentIndex): number {
     do {
         currentIndex++
         if (currentIndex === array.length) currentIndex = 0
@@ -29,13 +29,13 @@ export function nextOrWrap<Type>(array: Array<Type | null>, currentIndex): numbe
     return currentIndex
 }
 
-export function rotate(array: Array<any>, count: number) {
+export function rotate(array: any[], count: number) {
     count -= array.length * Math.floor(count / array.length);
     array.push.apply(array, array.splice(0, count));
 }
 
 // Remove consecutive (adjacent) duplicates
-export function unique<Type>(array:Array<Type>,  predicate:(first: Type, second: Type) => boolean = (first, second) => first !== second) : Array<Type> {
+export function unique<Type>(array:Type[],  predicate:(first: Type, second: Type) => boolean = (first, second) => first !== second) : Type[] {
     if (array.length === 0) {
         return array
     }
@@ -47,7 +47,7 @@ export function unique<Type>(array:Array<Type>,  predicate:(first: Type, second:
     }, [array[0]])
 }
 
-export function findMax<Type>(array:Array<Type>, compare:(first: Type, second: Type) => number): Type {
+export function findMax<Type>(array:Type[], compare:(first: Type, second: Type) => number): Type {
     assert(array.length > 0)
     return array.sort(compare)[0]
 }

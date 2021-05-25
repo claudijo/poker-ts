@@ -6,14 +6,14 @@ import Player from './player'
 
 
 export default class Pot {
-    private _eligiblePlayers: Array<SeatIndex> = []
+    private _eligiblePlayers: SeatIndex[] = []
     private _size: Chips = 0
 
     size(): Chips {
         return this._size
     }
 
-    eligiblePlayers(): Array<SeatIndex> {
+    eligiblePlayers(): SeatIndex[] {
         return this._eligiblePlayers
     }
 
@@ -29,7 +29,7 @@ export default class Pot {
             // If no players have bet, just make all the players who are still in the pot eligible.
             // It is possible that some player has folded even if nobody has bet.
             // We would not want to keep him as an eligible player.
-            this._eligiblePlayers = players.reduce((acc: Array<SeatIndex>, player:Player | null, index: SeatIndex) => {
+            this._eligiblePlayers = players.reduce((acc: SeatIndex[], player:Player | null, index: SeatIndex) => {
                 if (player !== null) acc.push(index)
                 return acc;
             }, [])

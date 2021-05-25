@@ -26,8 +26,8 @@ const seatArrayMapper = player => player === null
         betSize: player.betSize(),
     }
 
-const automaticActionFlagToStringArray = (automaticActionFlag: AutomaticActionFlag): Array<AutomaticAction> => {
-    const automaticActions: Array<AutomaticAction> = []
+const automaticActionFlagToStringArray = (automaticActionFlag: AutomaticActionFlag): AutomaticAction[] => {
+    const automaticActions: AutomaticAction[] = []
     if (automaticActionFlag & AutomaticActionFlag.FOLD) automaticActions.push('fold')
     if (automaticActionFlag & AutomaticActionFlag.CHECK_FOLD) automaticActions.push('check/fold')
     if (automaticActionFlag & AutomaticActionFlag.CHECK) automaticActions.push('check')
@@ -70,11 +70,11 @@ export default class Poker {
         return this._table.button()
     }
 
-    seats(): Array<{ totalChips: number, stack: number, betSize: number } | null> {
+    seats(): ({ totalChips: number, stack: number, betSize: number } | null)[] {
         return this._table.seats().map(seatArrayMapper)
     }
 
-    handPlayers(): Array<{ totalChips: number, stack: number, betSize: number } | null> {
+    handPlayers(): ({ totalChips: number, stack: number, betSize: number } | null)[] {
         return this._table.handPlayers().map(seatArrayMapper)
     }
 
@@ -82,7 +82,7 @@ export default class Poker {
         return this._table.numActivePlayers()
     }
 
-    pots(): Array<{ size: number, eligiblePlayers: Array<number> }> {
+    pots(): { size: number, eligiblePlayers: number[] }[] {
         return this._table.pots().map(pot => ({
             size: pot.size(),
             eligiblePlayers: pot.eligiblePlayers(),
@@ -129,11 +129,11 @@ export default class Poker {
         return RoundOfBetting[rob].toLowerCase()
     }
 
-    communityCards(): Array<Card> {
+    communityCards(): Card[] {
         return this._table.communityCards().cards().map(cardMapper)
     }
 
-    holeCards(): Array<Array<Card> | null> {
+    holeCards(): (Card[] | null)[] {
         return this._table.holeCards().map(cards => {
             return cards === null
                 ? null
@@ -165,7 +165,7 @@ export default class Poker {
         return this._table.canSetAutomaticAction(seatIndex)
     }
 
-    legalAutomaticAction(seatIndex: number): Array<AutomaticAction> {
+    legalAutomaticAction(seatIndex: number): AutomaticAction[] {
         const automaticActionFlag = this._table.legalAutomaticActions(seatIndex)
         return automaticActionFlagToStringArray(automaticActionFlag)
     }

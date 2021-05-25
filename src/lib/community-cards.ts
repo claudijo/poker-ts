@@ -17,13 +17,13 @@ export const next = (roundOfBetting: RoundOfBetting): RoundOfBetting => {
 }
 
 export default class CommunityCards {
-    private _cards: Array<Card> = []
+    private _cards: Card[] = []
 
-    cards(): Array<Card> {
+    cards(): Card[] {
         return this._cards
     }
 
-    deal(cards: Array<Card>): void {
+    deal(cards: Card[]): void {
         assert(cards.length <= 5 - this._cards.length, 'Cannot deal more than there is undealt cards')
         this._cards = this._cards.concat(cards)
     }

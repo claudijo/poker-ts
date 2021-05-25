@@ -22,24 +22,24 @@ export enum AutomaticAction {
 
 export default class Table {
     private readonly _numSeats: number
-    private readonly _table_players: SeatArray // All the players physically present at the table
+    private readonly _tablePlayers: SeatArray // All the players physically present at the table
     private readonly _deck: Deck
     private _handPlayers?: SeatArray
-    private _automaticActions?: Array<AutomaticAction | null>
+    private _automaticActions?: (AutomaticAction | null)[]
     private _firstTimeButton = true
     private _buttonSetManually = false // has the button been set manually
     private _button: SeatIndex = 0
     private _forcedBets: ForcedBets
     private _communityCards?: CommunityCards
     private _dealer?: Dealer
-    private _staged: Array<boolean> // All players who took a seat or stood up before the .start_hand()
+    private _staged: boolean[] // All players who took a seat or stood up before the .start_hand()
 
     constructor(forcedBets: ForcedBets, numSeats = 9) {
         assert(numSeats <= 23, 'Maximum 23 players')
 
         this._numSeats = numSeats
         this._forcedBets = forcedBets
-        this._table_players = new Array(numSeats).fill(null)
+        this._tablePlayers = new Array(numSeats).fill(null)
         this._staged = new Array(numSeats).fill(false)
         this._deck = new Deck()
     }
@@ -59,7 +59,7 @@ export default class Table {
     }
 
     seats(): SeatArray {
-        return this._table_players
+        return this._tablePlayers
     }
 
     handPlayers(): SeatArray {
@@ -76,7 +76,7 @@ export default class Table {
         return this._dealer.numActivePlayers()
     }
 
-    pots(): Array<Pot> {
+    pots(): Pot[] {
         assert(this.handInProgress(), 'Hand must be in progress')
         assert(this._dealer !== undefined)
 
@@ -100,7 +100,7 @@ export default class Table {
     startHand(seat?: number): void {
         assert(!this.handInProgress(), 'Hand must not be in progress')
         assert(
-            this._table_players.filter(player => player !== null).length >= 2,
+            this._tablePlayers.filter(player => player !== null).length >= 2,
             'There must be at least 2 players at the table',
         )
 
@@ -111,7 +111,7 @@ export default class Table {
 
         this._staged = new Array(this._numSeats).fill(false)
         this._automaticActions = new Array(this._numSeats).fill(null)
-        this._handPlayers = [...this._table_players]
+        this._handPlayers = [...this._tablePlayers]
         this.incrementButton()
         this._deck.fillAndShuffle()
         this._communityCards = new CommunityCards()
@@ -152,7 +152,7 @@ export default class Table {
         return this._communityCards
     }
 
-    holeCards(): Array<HoleCards | null> {
+    holeCards(): (HoleCards | null)[] {
         assert(this.handInProgress() || this.bettingRoundsCompleted(), 'Hand must be in progress or showdown must have ended')
         assert(this._dealer !== undefined)
 
@@ -206,7 +206,7 @@ export default class Table {
         this.standUpBustedPlayers()
     }
 
-    automaticActions(): Array<AutomaticAction | null> {
+    automaticActions(): (AutomaticAction | null)[] {
         assert(this.handInProgress(), 'Hand must be in progress')
         assert(this._automaticActions !== undefined)
 
@@ -220,7 +220,7 @@ export default class Table {
         // (1) This is only ever true for players that have been in the hand since the start.
         // Every following sit-down is accompanied by a _staged[s] = true
         // (2) If a player is not seated at the table, he obviously cannot set his automatic actions.
-        return !this._staged[seat] && this._table_players[seat] !== null
+        return !this._staged[seat] && this._tablePlayers[seat] !== null
     }
 
     legalAutomaticActions(seat: SeatIndex): AutomaticAction {
@@ -236,7 +236,7 @@ export default class Table {
         // check -> nullopt
         // call_any -> check
         const biggestBet = this._dealer.biggestBet()
-        const player = this._table_players[seat]
+        const player = this._tablePlayers[seat]
         assert(player !== null)
         const betSize = player.betSize()
         const totalChips = player.totalChips()
@@ -267,26 +267,26 @@ export default class Table {
 
     sitDown(seat: SeatIndex, buyIn: Chips): void {
         assert(seat < this._numSeats && seat >= 0, 'Given seat index must be valid')
-        assert(this._table_players[seat] === null, 'Given seat must not be occupied')
+        assert(this._tablePlayers[seat] === null, 'Given seat must not be occupied')
 
-        this._table_players[seat] = new Player(buyIn)
+        this._tablePlayers[seat] = new Player(buyIn)
         this._staged[seat] = true
     }
 
     standUp(seat: SeatIndex): void {
         assert(seat < this._numSeats && seat >= 0, 'Given seat index must be valid')
-        assert(this._table_players[seat] !== null, 'Given seat must be occupied')
+        assert(this._tablePlayers[seat] !== null, 'Given seat must be occupied')
 
         if (this.handInProgress()) {
             assert(this.bettingRoundInProgress())
             assert(this._handPlayers !== undefined)
             if (seat === this.playerToAct()) {
                 this.actionTaken(Action.FOLD)
-                this._table_players[seat] = null
+                this._tablePlayers[seat] = null
                 this._staged[seat] = true
             } else if (this._handPlayers[seat] !== null) {
                 this.setAutomaticAction(seat, AutomaticAction.FOLD)
-                this._table_players[seat] = null
+                this._tablePlayers[seat] = null
                 this._staged[seat] = true
 
                 if (this.singleActivePlayerRemaining()) {
@@ -295,7 +295,7 @@ export default class Table {
                 }
             }
         } else {
-            this._table_players[seat] = null
+            this._tablePlayers[seat] = null
         }
     }
 
@@ -398,8 +398,8 @@ export default class Table {
         assert(this._handPlayers !== undefined)
         for (let s = 0; s < this._numSeats; s++) {
             if (!this._staged[s] && this._handPlayers[s] !== null) {
-                assert(this._table_players[s] !== null)
-                this._table_players[s] = this._handPlayers[s]
+                assert(this._tablePlayers[s] !== null)
+                this._tablePlayers[s] = this._handPlayers[s]
             }
         }
     }
@@ -424,9 +424,9 @@ export default class Table {
     private standUpBustedPlayers(): void {
         assert(!this.handInProgress())
         for (let s = 0; s < this._numSeats; s++) {
-            const player = this._table_players[s]
+            const player = this._tablePlayers[s]
             if (player !== null && player.totalChips() === 0) {
-                this._table_players[s] = null
+                this._tablePlayers[s] = null
             }
         }
     }

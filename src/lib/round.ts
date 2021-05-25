@@ -8,14 +8,14 @@ export enum Action {
 }
 
 export default class Round {
-    private readonly _activePlayers: Array<boolean>
+    private readonly _activePlayers: boolean[]
     private _playerToAct: SeatIndex
     private _lastAggressiveActor: SeatIndex
     private _contested: boolean = false;
     private _firstAction: boolean = true;
     private _numActivePlayers: number = 0;
 
-    constructor(activePlayers: Array<boolean>, firstToAct: SeatIndex) {
+    constructor(activePlayers: boolean[], firstToAct: SeatIndex) {
         this._activePlayers = activePlayers
         this._playerToAct = firstToAct;
         this._lastAggressiveActor = firstToAct;
@@ -24,7 +24,7 @@ export default class Round {
         assert(firstToAct < activePlayers.length)
     }
 
-    activePlayers(): Array<boolean> {
+    activePlayers(): boolean[] {
         return this._activePlayers;
     }
 

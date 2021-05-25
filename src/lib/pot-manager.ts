@@ -3,14 +3,14 @@ import { Chips } from 'types/chips'
 import { SeatArray } from 'types/seat-array'
 
 export default class PotManager {
-    private readonly _pots: Array<Pot>
+    private readonly _pots: Pot[]
     private _aggregateFoldedBets: Chips = 0
 
     constructor() {
         this._pots = [new Pot()]
     }
 
-    pots(): Array<Pot> {
+    pots(): Pot[] {
         return this._pots
     }
 

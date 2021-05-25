@@ -63,7 +63,7 @@ export default class BettingRound {
         })
     }
 
-    activePlayers(): Array<boolean> {
+    activePlayers(): boolean[] {
         return this._round.activePlayers()
     }
 
