@@ -3,36 +3,6 @@ import Card from '../../src/lib/card'
 import { makeCards } from '../helper/card'
 
 describe('Hand', () => {
-    // describe('get strength', () => {
-    //     let allCards:Array<Array<Card>>
-    //     let strengths: Array<number>
-    //
-    //     beforeEach(() => {
-    //         allCards = [
-    //             makeCards('Ac Ac Ac Ac Ac'),
-    //             makeCards('2c 2c 2c 2c 2c'),
-    //             makeCards('2c 2c 2c 2c 3c'),
-    //             makeCards('3c 2c 2c 2c 2c'),
-    //             // makeCards('2c 2c 2c 2c 3c'),
-    //             // makeCards('Ac Ac Kc Kc 3c'),
-    //             // makeCards('Ac Ac Kc Qc Jc'),
-    //             // makeCards('Ac Kc Qc Jc 9c'),
-    //         ]
-    //
-    //         strengths = [
-    //             342732,
-    //             0,
-    //             2197,
-    //         ]
-    //     })
-    //
-    //     test('strengths', () => {
-    //         for (let index = 0; index < allCards.length; index++) {
-    //             expect(Hand.getStrength(allCards[index])).toEqual(strengths[index])
-    //         }
-    //     })
-    // })
-
     describe('get suited cards', () => {
         let allCards:Array<Array<Card>>
         let suited: Array<Array<Card> | null>
@@ -199,7 +169,6 @@ describe('Hand', () => {
                 makeCards('Ac Ac Kc Kc 3c'),
                 makeCards('Ac Ah Kc Qh Jc'),
                 makeCards('Ah Kc Qs Jd 9c'),
-
             ]
         })
 

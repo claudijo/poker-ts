@@ -1,4 +1,4 @@
-import Round, {Action} from '../../src/lib/round';
+import Round, { Action } from '../../src/lib/round';
 import {SeatIndex} from "../../src/types/seat-index";
 
 describe('Round', () => {

@@ -78,6 +78,4 @@ describe('Community cards', () => {
             expect(communityCards.cards().length).toBe(5)
         })
     })
-
-    
 })

@@ -331,36 +331,6 @@ describe('Table', () => {
             })
         })
 
-        // describe('a table where a player\'s automatic action is set to call', () => {
-        //     beforeEach(() => {
-        //         table.sitDown(1, 2000)
-        //         table.sitDown(2, 2000)
-        //         table.sitDown(3, 2000)
-        //         table.startHand()
-        //         table.setAutomaticAction(3, AutomaticAction.CALL)
-        //     })
-        //
-        //     describe('some other player raises', () => {
-        //         beforeEach(() => {
-        //             table.actionTaken(Action.RAISE, 200)
-        //         })
-        //
-        //         test('his/her automatic action gets removed', () => {
-        //             expect(table.automaticActions()[3]).toBeNull()
-        //         })
-        //     })
-        //
-        //     describe('that doesn\'t happen', () => {
-        //         beforeEach(() => {
-        //             table.actionTaken(Action.CALL)
-        //         })
-        //
-        //         test('his/her automatic action remains the same', () => {
-        //             expect(table.automaticActions()[3]).toBe(AutomaticAction.CALL)
-        //         })
-        //     })
-        // })
-
         describe('a table where a player\'s automatic action is set to call_any', () => {
             beforeEach(() => {
                 table.sitDown(1, 2000)

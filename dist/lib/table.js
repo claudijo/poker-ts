@@ -52,7 +52,7 @@ var Table = /** @class */ (function () {
         assert_1.default(numSeats <= 23, 'Maximum 23 players');
         this._numSeats = numSeats;
         this._forcedBets = forcedBets;
-        this._table_players = new Array(numSeats).fill(null);
+        this._tablePlayers = new Array(numSeats).fill(null);
         this._staged = new Array(numSeats).fill(false);
         this._deck = new deck_1.default();
     }
@@ -67,7 +67,7 @@ var Table = /** @class */ (function () {
         return this._dealer.button();
     };
     Table.prototype.seats = function () {
-        return this._table_players;
+        return this._tablePlayers;
     };
     Table.prototype.handPlayers = function () {
         assert_1.default(this.handInProgress(), 'Hand must be in progress');
@@ -96,14 +96,14 @@ var Table = /** @class */ (function () {
     };
     Table.prototype.startHand = function (seat) {
         assert_1.default(!this.handInProgress(), 'Hand must not be in progress');
-        assert_1.default(this._table_players.filter(function (player) { return player !== null; }).length >= 2, 'There must be at least 2 players at the table');
+        assert_1.default(this._tablePlayers.filter(function (player) { return player !== null; }).length >= 2, 'There must be at least 2 players at the table');
         if (seat !== undefined) {
             this._button = seat;
             this._buttonSetManually = true;
         }
         this._staged = new Array(this._numSeats).fill(false);
         this._automaticActions = new Array(this._numSeats).fill(null);
-        this._handPlayers = __spreadArray([], this._table_players);
+        this._handPlayers = __spreadArray([], this._tablePlayers);
         this.incrementButton();
         this._deck.fillAndShuffle();
         this._communityCards = new community_cards_1.default();
@@ -190,7 +190,7 @@ var Table = /** @class */ (function () {
         // (1) This is only ever true for players that have been in the hand since the start.
         // Every following sit-down is accompanied by a _staged[s] = true
         // (2) If a player is not seated at the table, he obviously cannot set his automatic actions.
-        return !this._staged[seat] && this._table_players[seat] !== null;
+        return !this._staged[seat] && this._tablePlayers[seat] !== null;
     };
     Table.prototype.legalAutomaticActions = function (seat) {
         assert_1.default(this.canSetAutomaticAction(seat), 'Player must be allowed to set automatic actions');
@@ -205,7 +205,7 @@ var Table = /** @class */ (function () {
         // check -> nullopt
         // call_any -> check
         var biggestBet = this._dealer.biggestBet();
-        var player = this._table_players[seat];
+        var player = this._tablePlayers[seat];
         assert_1.default(player !== null);
         var betSize = player.betSize();
         var totalChips = player.totalChips();
@@ -232,24 +232,24 @@ var Table = /** @class */ (function () {
     };
     Table.prototype.sitDown = function (seat, buyIn) {
         assert_1.default(seat < this._numSeats && seat >= 0, 'Given seat index must be valid');
-        assert_1.default(this._table_players[seat] === null, 'Given seat must not be occupied');
-        this._table_players[seat] = new player_1.default(buyIn);
+        assert_1.default(this._tablePlayers[seat] === null, 'Given seat must not be occupied');
+        this._tablePlayers[seat] = new player_1.default(buyIn);
         this._staged[seat] = true;
     };
     Table.prototype.standUp = function (seat) {
         assert_1.default(seat < this._numSeats && seat >= 0, 'Given seat index must be valid');
-        assert_1.default(this._table_players[seat] !== null, 'Given seat must be occupied');
+        assert_1.default(this._tablePlayers[seat] !== null, 'Given seat must be occupied');
         if (this.handInProgress()) {
             assert_1.default(this.bettingRoundInProgress());
             assert_1.default(this._handPlayers !== undefined);
             if (seat === this.playerToAct()) {
                 this.actionTaken(dealer_1.Action.FOLD);
-                this._table_players[seat] = null;
+                this._tablePlayers[seat] = null;
                 this._staged[seat] = true;
             }
             else if (this._handPlayers[seat] !== null) {
                 this.setAutomaticAction(seat, AutomaticAction.FOLD);
-                this._table_players[seat] = null;
+                this._tablePlayers[seat] = null;
                 this._staged[seat] = true;
                 if (this.singleActivePlayerRemaining()) {
                     // We only need to take action for this one player, and the other automatic actions will unfold automatically.
@@ -258,7 +258,7 @@ var Table = /** @class */ (function () {
             }
         }
         else {
-            this._table_players[seat] = null;
+            this._tablePlayers[seat] = null;
         }
     };
     Table.prototype.takeAutomaticAction = function (automaticAction) {
@@ -359,8 +359,8 @@ var Table = /** @class */ (function () {
         assert_1.default(this._handPlayers !== undefined);
         for (var s = 0; s < this._numSeats; s++) {
             if (!this._staged[s] && this._handPlayers[s] !== null) {
-                assert_1.default(this._table_players[s] !== null);
-                this._table_players[s] = this._handPlayers[s];
+                assert_1.default(this._tablePlayers[s] !== null);
+                this._tablePlayers[s] = this._handPlayers[s];
             }
         }
     };
@@ -382,9 +382,9 @@ var Table = /** @class */ (function () {
     Table.prototype.standUpBustedPlayers = function () {
         assert_1.default(!this.handInProgress());
         for (var s = 0; s < this._numSeats; s++) {
-            var player = this._table_players[s];
+            var player = this._tablePlayers[s];
             if (player !== null && player.totalChips() === 0) {
-                this._table_players[s] = null;
+                this._tablePlayers[s] = null;
             }
         }
     };

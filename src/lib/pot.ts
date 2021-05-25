@@ -4,7 +4,6 @@ import { Chips } from 'types/chips'
 import { SeatArray } from 'types/seat-array'
 import Player from './player'
 
-
 export default class Pot {
     private _eligiblePlayers: SeatIndex[] = []
     private _size: Chips = 0

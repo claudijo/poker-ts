@@ -1,4 +1,3 @@
-import { randomInt } from 'crypto'
 import assert from 'assert'
 import Card, { CardRank, CardSuit } from './card'
 import { shuffle } from '../util/array'

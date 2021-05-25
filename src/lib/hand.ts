@@ -247,6 +247,4 @@ export default class Hand {
     cards(): Card[] {
         return this._cards
     }
-
-
 }

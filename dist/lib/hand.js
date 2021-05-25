@@ -212,14 +212,14 @@ var Hand = /** @class */ (function () {
                     ranking = HandRanking.STRAIGHT_FLUSH;
                     strength = straightCards[0].rank;
                 }
-                var cards_2 = straightCards.slice(0, 5);
-                return new Hand(ranking, strength, cards_2);
+                var handCards = straightCards.slice(0, 5);
+                return new Hand(ranking, strength, handCards);
             }
             else {
                 var ranking = HandRanking.FLUSH;
-                var cards_3 = suitedCards.slice(0, 5);
-                var strength = this.getStrength(cards_3);
-                return new Hand(ranking, strength, cards_3);
+                var handCards = suitedCards.slice(0, 5);
+                var strength = this.getStrength(handCards);
+                return new Hand(ranking, strength, handCards);
             }
         }
         else {

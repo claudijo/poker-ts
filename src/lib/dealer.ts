@@ -14,7 +14,6 @@ import Hand, { HandRanking } from './hand'
 import { findIndexAdjacent, nextOrWrap } from '../util/array'
 import Card from './card'
 
-
 export class ActionRange {
     action: Action = Action.FOLD // You can always fold
     chipRange?: ChipRange
@@ -42,11 +41,11 @@ export enum Action {
 export default class Dealer {
     private readonly _button: SeatIndex = 0
     private readonly _communityCards: CommunityCards
+    private readonly _holeCards: HoleCards[]
     private _players: SeatArray
     private _bettingRound: BettingRound | null = null
     private _forcedBets: ForcedBets
     private _deck: Deck
-    private _holeCards: HoleCards[]
     private _handInProgress: boolean = false
     private _roundOfBetting: RoundOfBetting = RoundOfBetting.PREFLOP
     private _bettingRoundsCompleted: boolean = false
