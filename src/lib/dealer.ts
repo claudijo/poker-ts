@@ -46,19 +46,20 @@ export default class Dealer {
     private _bettingRound: BettingRound | null = null
     private _forcedBets: ForcedBets
     private _deck: Deck
-    private _holeCards: Array<HoleCards> = []
+    private _holeCards: Array<HoleCards>
     private _handInProgress: boolean = false
     private _roundOfBetting: RoundOfBetting = RoundOfBetting.PREFLOP
     private _bettingRoundsCompleted: boolean = false
     private _potManager: PotManager
 
-    constructor(players: SeatArray, button: SeatIndex, forcedBets: ForcedBets, deck: Deck, communityCards: CommunityCards) {
+    constructor(players: SeatArray, button: SeatIndex, forcedBets: ForcedBets, deck: Deck, communityCards: CommunityCards, numSeats: number = 9) {
         this._players = players
         this._button = button
         this._forcedBets = forcedBets
         this._deck = deck
         this._communityCards = communityCards
         this._potManager = new PotManager()
+        this._holeCards = new Array(numSeats).fill(null)
 
         assert(deck.length === 52, 'Deck must be whole')
         assert(communityCards.cards().length === 0, 'No community cards should have been dealt')

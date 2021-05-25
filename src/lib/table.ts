@@ -23,13 +23,13 @@ export enum AutomaticAction {
 export default class Table {
     private readonly _numSeats: number
     private readonly _table_players: SeatArray // All the players physically present at the table
+    private readonly _deck: Deck
     private _handPlayers?: SeatArray
     private _automaticActions?: Array<AutomaticAction | null>
     private _firstTimeButton = true
     private _buttonSetManually = false // has the button been set manually
     private _button: SeatIndex = 0
     private _forcedBets: ForcedBets
-    private _deck: Deck
     private _communityCards?: CommunityCards
     private _dealer?: Dealer
     private _staged: Array<boolean> // All players who took a seat or stood up before the .start_hand()
@@ -405,7 +405,7 @@ export default class Table {
     }
 
     // A player is considered active (in class table context) if
-// he started in the current betting round, has not stood up or folded.
+    // he started in the current betting round, has not stood up or folded.
     private singleActivePlayerRemaining(): boolean {
         assert(this.bettingRoundInProgress())
         assert(this._dealer !== undefined)
