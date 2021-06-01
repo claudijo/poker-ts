@@ -113,13 +113,13 @@ var Poker = /** @class */ (function () {
     Poker.prototype.startHand = function () {
         this._table.startHand();
     };
-    Poker.prototype.handInProgress = function () {
+    Poker.prototype.isHandInProgress = function () {
         return this._table.handInProgress();
     };
-    Poker.prototype.bettingRoundInProgress = function () {
+    Poker.prototype.isBettingRoundInProgress = function () {
         return this._table.bettingRoundInProgress();
     };
-    Poker.prototype.bettingRoundsCompleted = function () {
+    Poker.prototype.areBettingRoundsCompleted = function () {
         return this._table.bettingRoundsCompleted();
     };
     Poker.prototype.roundOfBetting = function () {
