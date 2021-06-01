@@ -105,15 +105,15 @@ describe('Poker facade', () => {
         })
 
         test('hand in progress', () => {
-            expect(poker.handInProgress()).toBeTruthy()
+            expect(poker.isHandInProgress()).toBeTruthy()
         })
 
         test('betting round in progress', () => {
-            expect(poker.bettingRoundInProgress()).toBeTruthy()
+            expect(poker.isBettingRoundInProgress()).toBeTruthy()
         })
 
         test('betting rounds completed', () => {
-            expect(poker.bettingRoundsCompleted()).toBeFalsy()
+            expect(poker.areBettingRoundsCompleted()).toBeFalsy()
         })
 
         test('round of betting', () => {
@@ -200,9 +200,9 @@ describe('Poker facade', () => {
                 })
 
                 test('showdown', () => {
-                    expect(poker.handInProgress()).toBeTruthy()
+                    expect(poker.isHandInProgress()).toBeTruthy()
                     poker.showdown()
-                    expect(poker.handInProgress()).toBeFalsy()
+                    expect(poker.isHandInProgress()).toBeFalsy()
                 })
             })
 

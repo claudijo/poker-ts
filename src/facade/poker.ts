@@ -111,15 +111,15 @@ export default class Poker {
         this._table.startHand()
     }
 
-    handInProgress(): boolean {
+    isHandInProgress(): boolean {
         return this._table.handInProgress()
     }
 
-    bettingRoundInProgress(): boolean {
+    isBettingRoundInProgress(): boolean {
         return this._table.bettingRoundInProgress()
     }
 
-    bettingRoundsCompleted(): boolean {
+    areBettingRoundsCompleted(): boolean {
         return this._table.bettingRoundsCompleted()
     }
 
