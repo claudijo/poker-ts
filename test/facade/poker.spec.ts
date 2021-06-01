@@ -161,8 +161,8 @@ describe('Poker facade', () => {
                 }
             })
 
-            test('can set automatic action', () => {
-                expect(poker.canSetAutomaticAction(2)).toBeTruthy()
+            test('can set automatic actions', () => {
+                expect(poker.canSetAutomaticActions(2)).toBeTruthy()
             })
 
             test('legal automatic actions', () => {

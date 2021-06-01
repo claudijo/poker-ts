@@ -182,7 +182,7 @@ export default class Poker {
         })
     }
 
-    canSetAutomaticAction(seatIndex: number): boolean {
+    canSetAutomaticActions(seatIndex: number): boolean {
         return this._table.canSetAutomaticAction(seatIndex)
     }
 

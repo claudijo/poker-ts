@@ -174,7 +174,7 @@ var Poker = /** @class */ (function () {
                 : automaticActionFlagToStringArray(action)[0];
         });
     };
-    Poker.prototype.canSetAutomaticAction = function (seatIndex) {
+    Poker.prototype.canSetAutomaticActions = function (seatIndex) {
         return this._table.canSetAutomaticAction(seatIndex);
     };
     Poker.prototype.legalAutomaticAction = function (seatIndex) {
