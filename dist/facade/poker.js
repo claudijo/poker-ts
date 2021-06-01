@@ -37,6 +37,20 @@ var seatArrayMapper = function (player) { return player === null
         stack: player.stack(),
         betSize: player.betSize(),
     }; };
+var actionFlagToStringArray = function (actionFlag) {
+    var actions = [];
+    if (actionFlag && dealer_1.Action.FOLD)
+        actions.push('fold');
+    if (actionFlag && dealer_1.Action.CHECK)
+        actions.push('check');
+    if (actionFlag && dealer_1.Action.CALL)
+        actions.push('call');
+    if (actionFlag && dealer_1.Action.BET)
+        actions.push('bet');
+    if (actionFlag && dealer_1.Action.RAISE)
+        actions.push('raise');
+    return actions;
+};
 var automaticActionFlagToStringArray = function (automaticActionFlag) {
     var automaticActions = [];
     if (automaticActionFlag & table_1.AutomaticAction.FOLD)
@@ -129,6 +143,13 @@ var Poker = /** @class */ (function () {
     };
     Poker.prototype.communityCards = function () {
         return this._table.communityCards().cards().map(cardMapper);
+    };
+    Poker.prototype.legalActions = function () {
+        var legalAction = this._table.legalActions();
+        return {
+            actions: actionFlagToStringArray(legalAction.action),
+            chipRange: legalAction.chipRange
+        };
     };
     Poker.prototype.holeCards = function () {
         return this._table.holeCards().map(function (cards) {

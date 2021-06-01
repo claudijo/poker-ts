@@ -135,6 +135,11 @@ var Table = /** @class */ (function () {
         assert_1.default(this._communityCards !== undefined);
         return this._communityCards;
     };
+    Table.prototype.legalActions = function () {
+        assert_1.default(this.bettingRoundInProgress(), 'Betting round must be in progress');
+        assert_1.default(this._dealer !== undefined);
+        return this._dealer.legalActions();
+    };
     Table.prototype.holeCards = function () {
         assert_1.default(this.handInProgress() || this.bettingRoundsCompleted(), 'Hand must be in progress or showdown must have ended');
         assert_1.default(this._dealer !== undefined);

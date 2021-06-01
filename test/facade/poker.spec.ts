@@ -120,6 +120,13 @@ describe('Poker facade', () => {
             expect(poker.roundOfBetting()).toBe('preflop')
         })
 
+        test('legal actions', () => {
+            expect(poker.legalActions()).toEqual({
+                actions: ['fold', 'check', 'call', 'bet', 'raise'],
+                chipRange: { max: 2000, min: 200}
+            })
+        })
+
         describe('After first betting round', () => {
             beforeEach(() => {
                 poker.actionTaken('call')

@@ -3,7 +3,7 @@ import { SeatIndex } from 'types/seat-index'
 import { ForcedBets } from 'types/forced-bets'
 import Deck from './deck'
 import CommunityCards, { RoundOfBetting } from './community-cards'
-import Dealer, { Action } from './dealer'
+import Dealer, { Action, ActionRange } from './dealer'
 import assert from 'assert'
 import Pot from './pot'
 import { HoleCards } from 'types/hole-cards'
@@ -150,6 +150,13 @@ export default class Table {
         assert(this._communityCards !== undefined)
 
         return this._communityCards
+    }
+
+    legalActions(): ActionRange {
+        assert(this.bettingRoundInProgress(), 'Betting round must be in progress')
+        assert(this._dealer !== undefined)
+
+        return this._dealer.legalActions()
     }
 
     holeCards(): (HoleCards | null)[] {

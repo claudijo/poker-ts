@@ -2,7 +2,8 @@
 import Table, { AutomaticAction as AutomaticActionFlag } from '../lib/table'
 import { RoundOfBetting } from '../lib/community-cards'
 import { CardRank, CardSuit } from '../lib/card'
-import { Action } from '../lib/dealer'
+import { Action as ActionFlag } from '../lib/dealer'
+import ChipRange from '../lib/chip-range'
 
 type Card = {
     rank: '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'A'
@@ -10,6 +11,7 @@ type Card = {
 }
 
 type AutomaticAction = 'fold' | 'check/fold' | 'check' | 'call' | 'call any' | 'all-in'
+type Action = 'fold' | 'check' | 'call' | 'bet' | 'raise'
 
 const cardMapper: (card: { rank: CardRank, suit: CardSuit }) => Card = card => ({
     // @ts-ignore
@@ -25,6 +27,17 @@ const seatArrayMapper = player => player === null
         stack: player.stack(),
         betSize: player.betSize(),
     }
+
+const actionFlagToStringArray = (actionFlag: ActionFlag): Action[] => {
+    const actions: Action[] = []
+    if (actionFlag && ActionFlag.FOLD) actions.push('fold')
+    if (actionFlag && ActionFlag.CHECK) actions.push('check')
+    if (actionFlag && ActionFlag.CALL) actions.push('call')
+    if (actionFlag && ActionFlag.BET) actions.push('bet')
+    if (actionFlag && ActionFlag.RAISE) actions.push('raise')
+
+    return actions
+}
 
 const automaticActionFlagToStringArray = (automaticActionFlag: AutomaticActionFlag): AutomaticAction[] => {
     const automaticActions: AutomaticAction[] = []
@@ -133,6 +146,14 @@ export default class Poker {
         return this._table.communityCards().cards().map(cardMapper)
     }
 
+    legalActions(): { actions: Action[], chipRange?: ChipRange } {
+        const legalAction = this._table.legalActions()
+        return {
+            actions: actionFlagToStringArray(legalAction.action),
+            chipRange: legalAction.chipRange
+        }
+    }
+
     holeCards(): (Card[] | null)[] {
         return this._table.holeCards().map(cards => {
             return cards === null
@@ -142,7 +163,7 @@ export default class Poker {
     }
 
     actionTaken(action: 'fold' | 'check' | 'call' | 'bet' | ' raise', betSize?: number) {
-        this._table.actionTaken(Action[action.toUpperCase()], betSize)
+        this._table.actionTaken(ActionFlag[action.toUpperCase()], betSize)
     }
 
     endBettingRound(): void {
