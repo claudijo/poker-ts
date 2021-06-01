@@ -166,7 +166,7 @@ describe('Poker facade', () => {
             })
 
             test('legal automatic actions', () => {
-                expect(poker.legalAutomaticAction(2)).toEqual([
+                expect(poker.legalAutomaticActions(2)).toEqual([
                     'fold',
                     'check/fold',
                     'check',

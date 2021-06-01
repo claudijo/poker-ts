@@ -186,7 +186,7 @@ export default class Poker {
         return this._table.canSetAutomaticAction(seatIndex)
     }
 
-    legalAutomaticAction(seatIndex: number): AutomaticAction[] {
+    legalAutomaticActions(seatIndex: number): AutomaticAction[] {
         const automaticActionFlag = this._table.legalAutomaticActions(seatIndex)
         return automaticActionFlagToStringArray(automaticActionFlag)
     }
