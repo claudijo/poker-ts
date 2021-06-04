@@ -122,7 +122,7 @@ describe('Poker facade', () => {
 
         test('legal actions', () => {
             expect(poker.legalActions()).toEqual({
-                actions: ['fold', 'check', 'call', 'bet', 'raise'],
+                actions: ['fold', 'call', 'raise'],
                 chipRange: { max: 2000, min: 200}
             })
         })

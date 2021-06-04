@@ -30,11 +30,11 @@ const seatArrayMapper = player => player === null
 
 const actionFlagToStringArray = (actionFlag: ActionFlag): Action[] => {
     const actions: Action[] = []
-    if (actionFlag && ActionFlag.FOLD) actions.push('fold')
-    if (actionFlag && ActionFlag.CHECK) actions.push('check')
-    if (actionFlag && ActionFlag.CALL) actions.push('call')
-    if (actionFlag && ActionFlag.BET) actions.push('bet')
-    if (actionFlag && ActionFlag.RAISE) actions.push('raise')
+    if (actionFlag & ActionFlag.FOLD) actions.push('fold')
+    if (actionFlag & ActionFlag.CHECK) actions.push('check')
+    if (actionFlag & ActionFlag.CALL) actions.push('call')
+    if (actionFlag & ActionFlag.BET) actions.push('bet')
+    if (actionFlag & ActionFlag.RAISE) actions.push('raise')
 
     return actions
 }
@@ -147,10 +147,10 @@ export default class Poker {
     }
 
     legalActions(): { actions: Action[], chipRange?: ChipRange } {
-        const legalAction = this._table.legalActions()
+        const { action, chipRange } = this._table.legalActions()
         return {
-            actions: actionFlagToStringArray(legalAction.action),
-            chipRange: legalAction.chipRange
+            actions: actionFlagToStringArray(action),
+            chipRange: chipRange
         }
     }
 
