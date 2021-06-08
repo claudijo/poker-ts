@@ -4,7 +4,7 @@ import { makeCards } from '../helper/card'
 
 describe('Hand', () => {
     describe('get suited cards', () => {
-        let allCards:Array<Array<Card>>
+        let allCards: Array<Array<Card>>
         let suited: Array<Array<Card> | null>
 
         beforeEach(() => {
@@ -31,7 +31,7 @@ describe('Hand', () => {
     })
 
     describe('get straight cards', () => {
-        let allCards:Array<Array<Card>>
+        let allCards: Array<Array<Card>>
         let straight: Array<Array<Card> | null>
 
         beforeEach(() => {
@@ -58,9 +58,9 @@ describe('Hand', () => {
     })
 
     describe('high/low hand evaluation', () => {
-        let allCards:Array<Array<Card>>
-        let hands:Array<Hand>
-        let handRankings:Array<HandRanking>
+        let allCards: Array<Array<Card>>
+        let hands: Array<Hand>
+        let handRankings: Array<HandRanking>
 
         beforeEach(() => {
             allCards = [
@@ -87,7 +87,7 @@ describe('Hand', () => {
                 HandRanking.THREE_OF_A_KIND,
                 HandRanking.TWO_PAIR,
                 HandRanking.PAIR,
-                HandRanking.HIGH_CARD
+                HandRanking.HIGH_CARD,
             ]
         })
 
@@ -99,9 +99,9 @@ describe('Hand', () => {
     })
 
     describe('straight/flush hand evaluation', () => {
-        let allCards:Array<Array<Card>>
-        let hands:Array<Hand | null>
-        let handRankings:Array<HandRanking>
+        let allCards: Array<Array<Card>>
+        let hands: Array<Hand | null>
+        let handRankings: Array<HandRanking>
 
         beforeEach(() => {
             allCards = [
@@ -137,8 +137,8 @@ describe('Hand', () => {
     })
 
     describe('Hand from seven cards', () => {
-        let allCards:Array<Array<Card>>
-        let handCards:Array<Array<Card>>
+        let allCards: Array<Array<Card>>
+        let handCards: Array<Array<Card>>
 
         beforeEach(() => {
             allCards = [

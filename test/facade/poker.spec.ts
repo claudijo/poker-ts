@@ -123,7 +123,7 @@ describe('Poker facade', () => {
         test('legal actions', () => {
             expect(poker.legalActions()).toEqual({
                 actions: ['fold', 'call', 'raise'],
-                chipRange: { max: 2000, min: 200}
+                chipRange: { max: 2000, min: 200 },
             })
         })
 
@@ -151,7 +151,7 @@ describe('Poker facade', () => {
 
             test('hole cards', () => {
                 expect(poker.holeCards().length).toBe(9)
-                for(const cards of poker.holeCards()) {
+                for (const cards of poker.holeCards()) {
                     if (cards !== null) {
                         for (const card of cards) {
                             expect(card.suit).toMatch(/clubs|diamonds|hearts|spades/)

@@ -13,7 +13,7 @@ describe('Pot Manager', () => {
         players[2].bet(60)
         const potManager = new PotManager()
         potManager.collectBetsForm(players)
-        expect(potManager.pots().length).toBe(3);
+        expect(potManager.pots().length).toBe(3)
         expect(potManager.pots()[0].size()).toBe(60)
         expect(potManager.pots()[1].size()).toBe(40)
         expect(potManager.pots()[2].size()).toBe(20)

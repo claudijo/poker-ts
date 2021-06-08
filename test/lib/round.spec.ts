@@ -1,5 +1,5 @@
-import Round, { Action } from '../../src/lib/round';
-import {SeatIndex} from "../../src/types/seat-index";
+import Round, { Action } from '../../src/lib/round'
+import { SeatIndex } from '../../src/types/seat-index'
 
 describe('Round', () => {
     test('two leave, one of which is contesting do not result in round being over', () => {
@@ -159,7 +159,7 @@ describe('Round', () => {
 
             describe('he player to act acts aggressively and leaves', () => {
                 beforeEach(() => {
-                    round.actionTaken(Action.AGGRESSIVE | Action.LEAVE);
+                    round.actionTaken(Action.AGGRESSIVE | Action.LEAVE)
                 })
 
                 test('the player to act becomes the last aggressive actor', () => {
@@ -181,7 +181,7 @@ describe('Round', () => {
 
             describe('the current player acts passively', () => {
                 beforeEach(() => {
-                    round.actionTaken(Action.PASSIVE);
+                    round.actionTaken(Action.PASSIVE)
                 })
 
                 test('the round is over', () => {
@@ -191,7 +191,7 @@ describe('Round', () => {
 
             describe('the player to act acts passively and leaves', () => {
                 beforeEach(() => {
-                    round.actionTaken(Action.PASSIVE | Action.LEAVE);
+                    round.actionTaken(Action.PASSIVE | Action.LEAVE)
                 })
 
                 test('the round is over', () => {
@@ -201,7 +201,7 @@ describe('Round', () => {
 
             describe('the player to act leaves', () => {
                 beforeEach(() => {
-                    round.actionTaken(Action.LEAVE);
+                    round.actionTaken(Action.LEAVE)
                 })
 
                 test('the round is over', () => {

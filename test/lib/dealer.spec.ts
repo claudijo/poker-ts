@@ -12,7 +12,7 @@ describe('Dealer', () => {
         let forcedBets: ForcedBets
         let deck: Deck
         let communityCards: CommunityCards
-        
+
         beforeEach(() => {
             forcedBets = { blinds: { big: 50, small: 25 } }
             deck = new Deck()
@@ -65,9 +65,9 @@ describe('Dealer', () => {
 
                 test('The betting round is not in progress', () => {
                     expect(dealer.bettingRoundInProgress()).toBeFalsy()
-                    dealer.endBettingRound();
+                    dealer.endBettingRound()
                     expect(dealer.bettingRoundInProgress()).toBeFalsy()
-                    expect(dealer.bettingRoundsCompleted()).toBeTruthy();
+                    expect(dealer.bettingRoundsCompleted()).toBeTruthy()
                     expect(dealer.roundOfBetting()).toBe(RoundOfBetting.RIVER)
                     dealer.showdown()
                     expect(dealer.handInProgress()).toBeFalsy()
@@ -128,10 +128,10 @@ describe('Dealer', () => {
 
         describe('There is two or more active players at the end of any betting round except river', () => {
             beforeEach(() => {
-                dealer.startHand();
-                dealer.actionTaken(Action.CALL);
-                dealer.actionTaken(Action.CALL);
-                dealer.actionTaken(Action.CHECK);
+                dealer.startHand()
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.CHECK)
             })
 
             test('precondition', () => {
@@ -156,30 +156,30 @@ describe('Dealer', () => {
 
         describe('There is two or more active players at the end of river', () => {
             beforeEach(() => {
-                dealer.startHand();
+                dealer.startHand()
 
                 // preflop
-                dealer.actionTaken(Action.CALL);
-                dealer.actionTaken(Action.CALL);
-                dealer.actionTaken(Action.CHECK);
-                dealer.endBettingRound();
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
 
                 // flop
-                dealer.actionTaken(Action.CHECK);
-                dealer.actionTaken(Action.CHECK);
-                dealer.actionTaken(Action.CHECK);
-                dealer.endBettingRound();
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
 
                 // turn
-                dealer.actionTaken(Action.CHECK);
-                dealer.actionTaken(Action.CHECK);
-                dealer.actionTaken(Action.CHECK);
-                dealer.endBettingRound();
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
 
                 // river
-                dealer.actionTaken(Action.CHECK);
-                dealer.actionTaken(Action.CHECK);
-                dealer.actionTaken(Action.CHECK);
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
                 // not ended yet
             })
 
@@ -224,8 +224,8 @@ describe('Dealer', () => {
 
             describe('The betting round is ended', () => {
                 beforeEach(() => {
-                    dealer.endBettingRound();
-                    dealer.showdown();
+                    dealer.endBettingRound()
+                    dealer.showdown()
                 })
 
                 test('The hand is over', () => {
@@ -255,8 +255,8 @@ describe('Dealer', () => {
 
             describe('The betting round is ended', () => {
                 beforeEach(() => {
-                    dealer.endBettingRound();
-                    dealer.showdown();
+                    dealer.endBettingRound()
+                    dealer.showdown()
                 })
 
                 test('The hand is over', () => {
@@ -287,10 +287,10 @@ describe('Dealer', () => {
             players[2] = new Player(1000)
             dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
 
-            dealer.startHand();
-            dealer.actionTaken(Action.FOLD);
-            dealer.actionTaken(Action.CALL);
-            dealer.actionTaken(Action.CHECK);
+            dealer.startHand()
+            dealer.actionTaken(Action.FOLD)
+            dealer.actionTaken(Action.CALL)
+            dealer.actionTaken(Action.CHECK)
         })
 
         test('betting round is not in progress after last remaining player folds', () => {
@@ -302,11 +302,11 @@ describe('Dealer', () => {
 
         describe('The betting round is ended', () => {
             beforeEach(() => {
-                dealer.endBettingRound();
+                dealer.endBettingRound()
             })
 
             test('Player folds', () => {
-                dealer.actionTaken(Action.FOLD);
+                dealer.actionTaken(Action.FOLD)
                 expect(dealer.bettingRoundInProgress()).toBeFalsy()
             })
         })
@@ -330,10 +330,10 @@ describe('Dealer', () => {
                 players[2] = new Player(1000)
                 dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
 
-                dealer.startHand();
-                dealer.actionTaken(Action.RAISE, 1000);
-                dealer.actionTaken(Action.FOLD);
-                dealer.actionTaken(Action.FOLD);
+                dealer.startHand()
+                dealer.actionTaken(Action.RAISE, 1000)
+                dealer.actionTaken(Action.FOLD)
+                dealer.actionTaken(Action.FOLD)
                 dealer.endBettingRound()
                 dealer.showdown()
             })
@@ -361,10 +361,10 @@ describe('Dealer', () => {
                 players[2] = new Player(100)
                 dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
 
-                dealer.startHand();
-                dealer.actionTaken(Action.RAISE, 300);
-                dealer.actionTaken(Action.CALL);
-                dealer.actionTaken(Action.CALL);
+                dealer.startHand()
+                dealer.actionTaken(Action.RAISE, 300)
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.CALL)
                 dealer.endBettingRound()
 
                 communityCards = new CommunityCards()
@@ -394,8 +394,8 @@ describe('Dealer', () => {
                 players[1] = new Player(1000)
                 let dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
                 dealer.startHand()
-                dealer.actionTaken(Action.CALL);
-                dealer.actionTaken(Action.FOLD);
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.FOLD)
                 dealer.endBettingRound()
                 dealer.showdown()
 

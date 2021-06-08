@@ -1,5 +1,5 @@
-import CommunityCards from "../../src/lib/community-cards";
-import Card, {CardRank, CardSuit} from "../../src/lib/card";
+import CommunityCards from '../../src/lib/community-cards'
+import Card, { CardRank, CardSuit } from '../../src/lib/card'
 
 describe('Community cards', () => {
     let communityCards: CommunityCards

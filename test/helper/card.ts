@@ -8,12 +8,17 @@ export function makeCards(description: string): Array<Card> {
 
         const cardRank = CardRank[rank.replace(/(\d)/, '_$1').toUpperCase()]
         const cardSuite: CardSuit = (() => {
-            switch(suite.toUpperCase()) {
-                case 'S': return CardSuit.SPADES
-                case 'H': return CardSuit.HEARTS
-                case 'C': return CardSuit.CLUBS
-                case 'D': return CardSuit.DIAMONDS
-                default: throw new Error('Invalid suite')
+            switch (suite.toUpperCase()) {
+                case 'S':
+                    return CardSuit.SPADES
+                case 'H':
+                    return CardSuit.HEARTS
+                case 'C':
+                    return CardSuit.CLUBS
+                case 'D':
+                    return CardSuit.DIAMONDS
+                default:
+                    throw new Error('Invalid suite')
             }
         })()
 
