@@ -5,7 +5,7 @@ import CommunityCards, { RoundOfBetting } from '../../src/lib/community-cards'
 import { SeatArray } from '../../src/types/seat-array'
 import Player from '../../src/lib/player'
 import Card, { CardRank, CardSuit } from '../../src/lib/card'
-import exp = require('constants')
+import { shuffleForThreePlayersWithTwoWinners } from '../helper/card'
 
 describe('Dealer', () => {
     describe('Starting the hand', () => {
@@ -343,6 +343,105 @@ describe('Dealer', () => {
                 expect(players[0]?.stack()).toBe(1075)
             })
         })
+
+        describe('single winner after full round', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
+            beforeEach(() => {
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck(() => {})
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(1000)
+                players[1] = new Player(1000)
+                players[2] = new Player(1000)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+
+                dealer.startHand()
+
+                dealer.actionTaken(Action.RAISE, 500)
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.CALL)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.showdown()
+            })
+
+            test('pot has been divided', () => {
+                expect(players[0]?.stack()).toBe(500)
+                expect(players[1]?.stack()).toBe(500)
+                expect(players[2]?.stack()).toBe(2000)
+            })
+        })
+
+        describe('two winners share odd pot', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
+            beforeEach(() => {
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck(shuffleForThreePlayersWithTwoWinners)
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(1000)
+                players[1] = new Player(1000)
+                players[2] = new Player(1000)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+
+                dealer.startHand()
+
+                dealer.actionTaken(Action.RAISE, 501)
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.CALL)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.showdown()
+            })
+
+            test('pot has been divided', () => {
+                expect(players[0]?.stack()).toBe(499)
+                expect(players[1]?.stack()).toBe(1251)
+                expect(players[2]?.stack()).toBe(1250)
+            })
+        })
+
 
         describe('multiple pots, multiple winners', () => {
             let forcedBets: ForcedBets

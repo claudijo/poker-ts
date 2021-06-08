@@ -25,3 +25,13 @@ export function makeCards(description: string): Array<Card> {
         return new Card(cardRank, cardSuite)
     })
 }
+
+export function shuffleForThreePlayersWithTwoWinners(array: Card[]) {
+    const cards = makeCards(
+        '2c 2c' + // First player
+        ' Kc 2c' + // Second player
+        ' Kc 2c' + // Third player
+        ' Ac Ac Ac Ac As' // Community cards
+    )
+    cards.forEach((card, index) => array[51 - index] = card)
+}
