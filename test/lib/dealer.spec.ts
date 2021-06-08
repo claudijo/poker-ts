@@ -340,7 +340,6 @@ describe('Dealer', () => {
 
             test('single winner', () => {
                 expect(dealer.handInProgress()).toBeFalsy()
-                console.log('players[0]', players[0])
                 expect(players[0]?.stack()).toBe(1075)
             })
         })
