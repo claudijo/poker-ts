@@ -148,7 +148,7 @@ var Poker = /** @class */ (function () {
         var _a = this._table.legalActions(), action = _a.action, chipRange = _a.chipRange;
         return {
             actions: actionFlagToStringArray(action),
-            chipRange: chipRange
+            chipRange: chipRange,
         };
     };
     Poker.prototype.holeCards = function () {

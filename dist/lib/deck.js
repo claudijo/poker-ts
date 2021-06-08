@@ -42,24 +42,26 @@ var card_1 = __importStar(require("./card"));
 var array_1 = require("../util/array");
 var Deck = /** @class */ (function (_super) {
     __extends(Deck, _super);
-    function Deck() {
+    function Deck(shuffleAlgorithm) {
+        if (shuffleAlgorithm === void 0) { shuffleAlgorithm = array_1.shuffle; }
         var _this = _super.call(this) || this;
         // Set the prototype explicitly when extending Array
         // See https://github.com/Microsoft/TypeScript/wiki/FAQ#why-doesnt-extending-built-ins-like-error-array-and-map-work
         Object.setPrototypeOf(_this, Deck.prototype);
-        _this._size = 52;
         var index = 0;
         for (var suit = card_1.CardSuit.CLUBS; suit <= card_1.CardSuit.SPADES; suit++) {
             for (var rank = card_1.CardRank._2; rank <= card_1.CardRank.A; rank++) {
                 _this[index++] = new card_1.default(rank, suit);
             }
         }
-        array_1.shuffle(_this);
+        _this.shuffle = shuffleAlgorithm.bind(null, _this);
+        _this._size = 52;
+        _this.shuffle();
         return _this;
     }
     Deck.prototype.fillAndShuffle = function () {
         this._size = 52;
-        array_1.shuffle(this);
+        this.shuffle();
     };
     Deck.prototype.draw = function () {
         assert_1.default(this._size > 0, 'Cannot draw from an empty deck');

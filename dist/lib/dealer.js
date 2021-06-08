@@ -249,20 +249,19 @@ var Dealer = /** @class */ (function () {
                 return [seatIndex, hand_1.default.create(_this._holeCards[seatIndex], _this._communityCards)];
             });
             playerResults.sort(function (_a, _b) {
-                var lhs = _a[1];
-                var rhs = _b[1];
-                return hand_1.default.compare(lhs, rhs);
+                var first = _a[1];
+                var second = _b[1];
+                return hand_1.default.compare(first, second);
             });
-            var firstWinner = playerResults[0];
-            var lastWinnerIndex = array_1.findIndexAdjacent(playerResults, function (playerResult) {
-                var lhs = playerResult[1];
-                var rhs = firstWinner[1];
-                return hand_1.default.compare(lhs, rhs) !== 0;
+            var lastWinnerIndex = array_1.findIndexAdjacent(playerResults, function (_a, _b) {
+                var first = _a[1];
+                var second = _b[1];
+                return hand_1.default.compare(first, second) !== 0;
             });
-            var numberOfWinners = lastWinnerIndex === -1 ? playerResults.length : lastWinnerIndex + 1;
+            var numberOfWinners = lastWinnerIndex === -1 ? 1 : lastWinnerIndex + 1;
             var oddChips = pot.size() % numberOfWinners;
             var payout = (pot.size() - oddChips) / numberOfWinners;
-            var winningPlayerResults = playerResults.slice(numberOfWinners);
+            var winningPlayerResults = playerResults.slice(0, numberOfWinners);
             winningPlayerResults.forEach(function (playerResult) {
                 var _a;
                 var seatIndex = playerResult[0];
