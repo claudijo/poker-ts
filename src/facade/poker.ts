@@ -150,7 +150,7 @@ export default class Poker {
         const { action, chipRange } = this._table.legalActions()
         return {
             actions: actionFlagToStringArray(action),
-            chipRange: chipRange
+            chipRange,
         }
     }
 
