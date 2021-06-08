@@ -314,73 +314,70 @@ describe('Dealer', () => {
 
     describe('Showdown', () => {
         describe('single pot single player', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
             beforeEach(() => {
-                let forcedBets: ForcedBets
-                let deck: Deck
-                let communityCards: CommunityCards
-                let players: SeatArray
-                let dealer: Dealer
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck()
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(1000)
+                players[1] = new Player(1000)
+                players[2] = new Player(1000)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
 
-                beforeEach(() => {
-                    forcedBets = { blinds: { big: 50, small: 25 } }
-                    deck = new Deck()
-                    communityCards = new CommunityCards()
-                    players = new Array(9).fill(null)
-                    players[0] = new Player(1000)
-                    players[1] = new Player(1000)
-                    players[2] = new Player(1000)
-                    dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+                dealer.startHand();
+                dealer.actionTaken(Action.RAISE, 1000);
+                dealer.actionTaken(Action.FOLD);
+                dealer.actionTaken(Action.FOLD);
+                dealer.endBettingRound()
+                dealer.showdown()
+            })
 
-                    dealer.startHand();
-                    dealer.actionTaken(Action.RAISE, 1000);
-                    dealer.actionTaken(Action.FOLD);
-                    dealer.actionTaken(Action.FOLD);
-                    dealer.endBettingRound()
-                    dealer.showdown()
-                })
-
-                test('single winner', () => {
-                    expect(dealer.handInProgress()).toBeFalsy()
-                    expect(dealer[0].stack()).toBe(1075)
-                })
+            test('single winner', () => {
+                expect(dealer.handInProgress()).toBeFalsy()
+                console.log('players[0]', players[0])
+                expect(players[0]?.stack()).toBe(1075)
             })
         })
 
         describe('multiple pots, multiple winners', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
             beforeEach(() => {
-                let forcedBets: ForcedBets
-                let deck: Deck
-                let communityCards: CommunityCards
-                let players: SeatArray
-                let dealer: Dealer
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck()
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(300)
+                players[1] = new Player(200)
+                players[2] = new Player(100)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
 
-                beforeEach(() => {
-                    forcedBets = { blinds: { big: 50, small: 25 } }
-                    deck = new Deck()
-                    communityCards = new CommunityCards()
-                    players = new Array(9).fill(null)
-                    players[0] = new Player(300)
-                    players[1] = new Player(200)
-                    players[2] = new Player(100)
-                    dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+                dealer.startHand();
+                dealer.actionTaken(Action.RAISE, 300);
+                dealer.actionTaken(Action.CALL);
+                dealer.actionTaken(Action.CALL);
+                dealer.endBettingRound()
 
-                    dealer.startHand();
-                    dealer.actionTaken(Action.RAISE, 300);
-                    dealer.actionTaken(Action.CALL);
-                    dealer.actionTaken(Action.CALL);
-                    dealer.endBettingRound()
+                communityCards = new CommunityCards()
+                communityCards.deal([
+                    new Card(CardRank.A, CardSuit.SPADES),
+                    new Card(CardRank.K, CardSuit.SPADES),
+                    new Card(CardRank.Q, CardSuit.SPADES),
+                    new Card(CardRank.J, CardSuit.SPADES),
+                    new Card(CardRank.T, CardSuit.SPADES),
+                ])
 
-                    communityCards = new CommunityCards()
-                    communityCards.deal([
-                        new Card(CardRank.A, CardSuit.SPADES),
-                        new Card(CardRank.K, CardSuit.SPADES),
-                        new Card(CardRank.Q, CardSuit.SPADES),
-                        new Card(CardRank.J, CardSuit.SPADES),
-                        new Card(CardRank.T, CardSuit.SPADES),
-                    ])
-
-                    //...
-                })
+                //...
             })
         })
 
