@@ -184,6 +184,11 @@ var Table = /** @class */ (function () {
         this.updateTablePlayers();
         this.standUpBustedPlayers();
     };
+    Table.prototype.winners = function () {
+        var _a, _b;
+        assert_1.default(!this.handInProgress(), 'Hand must not be in progress');
+        return (_b = (_a = this._dealer) === null || _a === void 0 ? void 0 : _a.winners()) !== null && _b !== void 0 ? _b : [];
+    };
     Table.prototype.automaticActions = function () {
         assert_1.default(this.handInProgress(), 'Hand must be in progress');
         assert_1.default(this._automaticActions !== undefined);

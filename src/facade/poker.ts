@@ -4,6 +4,8 @@ import { RoundOfBetting } from '../lib/community-cards'
 import { CardRank, CardSuit } from '../lib/card'
 import { Action as ActionFlag } from '../lib/dealer'
 import ChipRange from '../lib/chip-range'
+import { SeatIndex } from 'types/seat-index'
+import { HandRanking } from '../lib/hand'
 
 type Card = {
     rank: '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'A'
@@ -172,6 +174,21 @@ export default class Poker {
 
     showdown(): void {
         this._table.showdown()
+    }
+
+    winners(): [SeatIndex, { cards: Card[], ranking: HandRanking, strength: number }, Card[]][][] {
+        return this._table.winners().map(potWinners => potWinners.map(winner => {
+            const [seatIndex, hand, holeCards] = winner
+            return [
+                seatIndex,
+                {
+                    cards: hand.cards().map(cardMapper),
+                    ranking: hand.ranking(),
+                    strength: hand.strength(),
+                },
+                holeCards.map(cardMapper),
+            ]
+        }))
     }
 
     automaticActions(): any {
