@@ -6,6 +6,7 @@ import { SeatArray } from '../../src/types/seat-array'
 import Player from '../../src/lib/player'
 import Card, { CardRank, CardSuit } from '../../src/lib/card'
 import { shuffleForThreePlayersWithTwoWinners } from '../helper/card'
+import { HandRanking } from '../../src/lib/hand'
 
 describe('Dealer', () => {
     describe('Starting the hand', () => {
@@ -390,6 +391,25 @@ describe('Dealer', () => {
                 expect(players[0]?.stack()).toBe(500)
                 expect(players[1]?.stack()).toBe(500)
                 expect(players[2]?.stack()).toBe(2000)
+            })
+
+            test('reveal winner hand', () => {
+                const firstWinnerInFirstPot = dealer.winners()[0][0];
+                const [seatIndex, hand, holeCards] = firstWinnerInFirstPot;
+                expect(seatIndex).toBe(2)
+                expect(hand.ranking()).toBe(HandRanking.STRAIGHT_FLUSH)
+                expect(hand.strength()).toBe(8)
+                expect(hand.cards()).toEqual([
+                    new Card(8, 3),
+                    new Card(7, 3),
+                    new Card(6, 3),
+                    new Card(5, 3),
+                    new Card(4, 3),
+                ])
+                expect(holeCards).toEqual([
+                    new Card(8, 3),
+                    new Card(7, 3),
+                ])
             })
         })
 
