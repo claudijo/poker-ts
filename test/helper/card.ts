@@ -35,3 +35,13 @@ export function shuffleForThreePlayersWithTwoWinners(array: Card[]) {
     )
     cards.forEach((card, index) => array[51 - index] = card)
 }
+
+
+export function shuffleForTwoPlayersWithFullHouseWinner(array: Card[]) {
+    const cards = makeCards(
+        '4s 4c' + // First player
+        ' Kc 4h' + // Second player
+        ' Ac As 4d 2c 2s' // Community cards
+    )
+    cards.forEach((card, index) => array[51 - index] = card)
+}
