@@ -111,11 +111,11 @@ export default class Table {
 
         this._staged = new Array(this._numSeats).fill(false)
         this._automaticActions = new Array(this._numSeats).fill(null)
-        this._handPlayers = [...this._tablePlayers]
+        this._handPlayers = this._tablePlayers.map(player => player ? new Player(player.totalChips(), player.betSize()) : null)
         this.incrementButton()
         this._deck.fillAndShuffle()
         this._communityCards = new CommunityCards()
-        this._dealer = new Dealer(this._handPlayers, this._button, this._forcedBets, this._deck, this._communityCards)
+        this._dealer = new Dealer([...this._handPlayers], this._button, this._forcedBets, this._deck, this._communityCards)
         this._dealer.startHand()
         this.updateTablePlayers()
     }

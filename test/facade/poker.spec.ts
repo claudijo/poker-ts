@@ -127,6 +127,35 @@ describe('Poker facade', () => {
             })
         })
 
+        test('folded player bet stay on the table', () => {
+            poker.actionTaken('call');
+            poker.actionTaken('fold');
+
+            expect(poker.seats()).toEqual([
+                { totalChips: 2000, stack: 1900, betSize: 100 },
+                { totalChips: 2000, stack: 1950, betSize: 50 },
+                { totalChips: 2000, stack: 1900, betSize: 100 },
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+            ])
+
+            expect(poker.handPlayers()).toEqual([
+                { totalChips: 2000, stack: 1900, betSize: 100 },
+                null,
+                { totalChips: 2000, stack: 1900, betSize: 100 },
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+            ])
+        })
+
         describe('After first betting round', () => {
             beforeEach(() => {
                 poker.actionTaken('call')

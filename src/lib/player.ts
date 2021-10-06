@@ -5,8 +5,9 @@ export default class Player {
     private _total: Chips = 0
     private _betSize: Chips = 0
 
-    constructor(stack: Chips) {
+    constructor(stack: Chips, betSize: Chips = 0) {
         this._total = stack
+        this._betSize = betSize
     }
 
     stack(): Chips {
