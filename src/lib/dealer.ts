@@ -195,7 +195,7 @@ export default class Dealer {
             assert(foldingPlayer !== null)
             this._potManager.betFolded(foldingPlayer.betSize())
             foldingPlayer.takeFromBet(foldingPlayer.betSize())
-            this._players[this.playerToAct()] = null
+            this._players[this.playerToAct()]?.exclude()
             this._bettingRound.actionTaken(BettingRoundAction.LEAVE)
         }
     }

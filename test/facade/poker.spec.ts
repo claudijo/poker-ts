@@ -127,7 +127,7 @@ describe('Poker facade', () => {
             })
         })
 
-        test('folded player bet stay on the table', () => {
+        test('folded player bet stays on the table', () => {
             poker.actionTaken('call');
             poker.actionTaken('fold');
 

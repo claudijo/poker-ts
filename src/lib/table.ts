@@ -406,7 +406,11 @@ export default class Table {
         for (let s = 0; s < this._numSeats; s++) {
             if (!this._staged[s] && this._handPlayers[s] !== null) {
                 assert(this._tablePlayers[s] !== null)
-                this._tablePlayers[s] = this._handPlayers[s]
+                if (!this._handPlayers[s]?.isExcluded()) {
+                    const handPlayer = this._handPlayers[s]
+                    assert(handPlayer !== null);
+                    this._tablePlayers[s] = new Player(handPlayer.totalChips(), handPlayer.betSize())
+                }
             }
         }
     }
@@ -418,11 +422,10 @@ export default class Table {
         assert(this._dealer !== undefined)
 
         // What dealer::betting_round_players filter returns is all the players
-        // who started the current betting round and have not folded. Players who
-        // actually fold are manually discarded internally (to help with pot evaluation).
+        // who started the current betting round and have not folded.
         const bettingRoundPlayers = this._dealer.bettingRoundPlayers()
         const activePlayers = bettingRoundPlayers.filter((player, index) => {
-            return player !== null && !this._staged[index]
+            return player !== null && !this._staged[index] && !player.isExcluded()
         })
 
         return activePlayers.length === 1

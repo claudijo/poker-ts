@@ -4,6 +4,7 @@ import { Chips } from 'types/chips';
 export default class Player {
     private _total: Chips = 0
     private _betSize: Chips = 0
+    private _excluded: boolean = false
 
     constructor(stack: Chips, betSize: Chips = 0) {
         this._total = stack
@@ -20,6 +21,14 @@ export default class Player {
 
     totalChips(): Chips {
         return this._total
+    }
+
+    exclude(): void {
+        this._excluded = true
+    }
+
+    isExcluded(): boolean {
+        return this._excluded
     }
 
     addToStack(amount: Chips): void {
