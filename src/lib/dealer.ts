@@ -175,7 +175,7 @@ export default class Dealer {
         const firstAction = this.nextOrWrap(this.postBlinds())
         this.dealHoleCards()
         if (this._players.filter(player => player !== null && player.stack() !== 0).length > 1) {
-            this._bettingRound = new BettingRound(this._players, firstAction, this._forcedBets.blinds.big, this._forcedBets.blinds.big)
+            this._bettingRound = new BettingRound([...this._players], firstAction, this._forcedBets.blinds.big, this._forcedBets.blinds.big)
         }
         this._handInProgress = true
     }
@@ -195,7 +195,7 @@ export default class Dealer {
             assert(foldingPlayer !== null)
             this._potManager.betFolded(foldingPlayer.betSize())
             foldingPlayer.takeFromBet(foldingPlayer.betSize())
-            this._players[this.playerToAct()]?.exclude()
+            this._players[this.playerToAct()] = null
             this._bettingRound.actionTaken(BettingRoundAction.LEAVE)
         }
     }
@@ -219,7 +219,7 @@ export default class Dealer {
             // Start the next betting round.
             this._roundOfBetting = next(this._roundOfBetting)
             this._players = this._bettingRound?.players() ?? []
-            this._bettingRound = new BettingRound(this._players, this.nextOrWrap(this._button), this._forcedBets.blinds.big)
+            this._bettingRound = new BettingRound([...this._players], this.nextOrWrap(this._button), this._forcedBets.blinds.big)
             this.dealCommunityCards()
             assert(this._bettingRoundsCompleted === false)
         } else {
