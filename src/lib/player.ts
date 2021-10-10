@@ -32,14 +32,6 @@ export default class Player {
         return this._total
     }
 
-    exclude(): void {
-        this._excluded = true
-    }
-
-    isExcluded(): boolean {
-        return this._excluded
-    }
-
     addToStack(amount: Chips): void {
         this._total += amount
     }
