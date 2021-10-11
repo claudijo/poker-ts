@@ -98,7 +98,7 @@ var Table = /** @class */ (function () {
         }
         this._staged = new Array(this._numSeats).fill(false);
         this._automaticActions = new Array(this._numSeats).fill(null);
-        this._handPlayers = this._tablePlayers.map(function (player) { return player ? new player_1.default(player.stack()) : null; });
+        this._handPlayers = this._tablePlayers.map(function (player) { return player ? new player_1.default(player) : null; });
         this.incrementButton();
         this._deck.fillAndShuffle();
         this._communityCards = new community_cards_1.default();
@@ -170,6 +170,7 @@ var Table = /** @class */ (function () {
         this._dealer.endBettingRound();
         this.amendAutomaticActions();
         this.updateTablePlayers();
+        this.clearFoldedBets();
     };
     Table.prototype.showdown = function () {
         assert_1.default(!this.bettingRoundInProgress(), 'Betting round must not be in progress');
@@ -360,15 +361,25 @@ var Table = /** @class */ (function () {
                 : this._handPlayers.findIndex(function (player) { return player !== null; });
         }
     };
+    Table.prototype.clearFoldedBets = function () {
+        assert_1.default(this._handPlayers !== undefined);
+        for (var s = 0; s < this._numSeats; s++) {
+            var handPlayer = this._handPlayers[s];
+            var tablePlayer = this._tablePlayers[s];
+            if (!this._staged[s] && handPlayer === null && tablePlayer !== null && tablePlayer.betSize() > 0) {
+                // Has folded bet
+                assert_1.default(this._tablePlayers[s] !== null);
+                this._tablePlayers[s] = new player_1.default(tablePlayer.stack());
+            }
+        }
+    };
     Table.prototype.updateTablePlayers = function () {
         assert_1.default(this._handPlayers !== undefined);
         for (var s = 0; s < this._numSeats; s++) {
-            if (!this._staged[s] && this._handPlayers[s] !== null) {
+            var handPlayer = this._handPlayers[s];
+            if (!this._staged[s] && handPlayer !== null) {
                 assert_1.default(this._tablePlayers[s] !== null);
-                var handPlayer = this._handPlayers[s];
-                if (handPlayer !== null) {
-                    this._tablePlayers[s] = new player_1.default(handPlayer);
-                }
+                this._tablePlayers[s] = new player_1.default(handPlayer);
             }
         }
     };

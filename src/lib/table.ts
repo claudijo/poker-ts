@@ -112,7 +112,7 @@ export default class Table {
 
         this._staged = new Array(this._numSeats).fill(false)
         this._automaticActions = new Array(this._numSeats).fill(null)
-        this._handPlayers = this._tablePlayers.map(player => player ? new Player(player.stack()) : null)
+        this._handPlayers = this._tablePlayers.map(player => player ? new Player(player) : null)
         this.incrementButton()
         this._deck.fillAndShuffle()
         this._communityCards = new CommunityCards()
@@ -202,6 +202,7 @@ export default class Table {
         this._dealer.endBettingRound()
         this.amendAutomaticActions()
         this.updateTablePlayers()
+        this.clearFoldedBets()
     }
 
     showdown(): void {
@@ -408,15 +409,26 @@ export default class Table {
         }
     }
 
+    private clearFoldedBets(): void {
+        assert(this._handPlayers !== undefined)
+        for (let s = 0; s < this._numSeats; s++) {
+            const handPlayer = this._handPlayers[s]
+            const tablePlayer = this._tablePlayers[s]
+            if (!this._staged[s] && handPlayer === null && tablePlayer !== null && tablePlayer.betSize() > 0) {
+                // Has folded bet
+                assert(this._tablePlayers[s] !== null)
+                this._tablePlayers[s] = new Player(tablePlayer.stack())
+            }
+        }
+    }
+
     private updateTablePlayers(): void {
         assert(this._handPlayers !== undefined)
         for (let s = 0; s < this._numSeats; s++) {
-            if (!this._staged[s] && this._handPlayers[s] !== null) {
+            const handPlayer = this._handPlayers[s]
+            if (!this._staged[s] && handPlayer !== null) {
                 assert(this._tablePlayers[s] !== null)
-                const handPlayer = this._handPlayers[s]
-                if (handPlayer !== null) {
-                    this._tablePlayers[s] = new Player(handPlayer)
-                }
+                this._tablePlayers[s] = new Player(handPlayer)
             }
         }
     }

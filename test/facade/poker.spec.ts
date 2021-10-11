@@ -156,16 +156,13 @@ describe('Poker facade', () => {
             ])
         })
 
-        test('folded bet is cleared when starting new hand', () => {
+        test('bet is cleared from folding table player after ending betting round', () => {
             poker.actionTaken('call')
             poker.actionTaken('fold')
-            poker.actionTaken('fold')
+            poker.actionTaken('check')
             poker.endBettingRound()
-            poker.showdown()
-            poker.startHand()
 
-            expect(poker.button()).toBe(1)
-            expect(poker.handPlayers()[1]?.betSize).toEqual(0)
+            expect(poker.seats()[1]?.betSize).toEqual(0)
         })
 
         describe('After first betting round', () => {
