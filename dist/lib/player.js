@@ -4,11 +4,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var assert_1 = __importDefault(require("assert"));
+var chips_1 = require("../type-guards/chips");
 var Player = /** @class */ (function () {
-    function Player(stack) {
+    function Player(arg) {
         this._total = 0;
         this._betSize = 0;
-        this._total = stack;
+        if (chips_1.isChips(arg)) {
+            this._total = arg;
+        }
+        else if (arg instanceof Player) {
+            this._total = arg._total;
+            this._betSize = arg._betSize;
+        }
+        else {
+            throw new Error('Invalid argument');
+        }
     }
     Player.prototype.stack = function () {
         return this._total - this._betSize;
