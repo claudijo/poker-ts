@@ -50,6 +50,7 @@ export default class Dealer {
     private _roundOfBetting: RoundOfBetting = RoundOfBetting.PREFLOP
     private _bettingRoundsCompleted: boolean = false
     private _potManager: PotManager
+    private _winners: [SeatIndex, Hand, HoleCards][][]
 
     constructor(players: SeatArray, button: SeatIndex, forcedBets: ForcedBets, deck: Deck, communityCards: CommunityCards, numSeats: number = 9) {
         this._players = players
@@ -59,6 +60,7 @@ export default class Dealer {
         this._communityCards = communityCards
         this._potManager = new PotManager()
         this._holeCards = new Array(numSeats).fill(null)
+        this._winners = []
 
         assert(deck.length === 52, 'Deck must be whole')
         assert(communityCards.cards().length === 0, 'No community cards should have been dealt')
@@ -171,6 +173,7 @@ export default class Dealer {
         assert(!this.handInProgress(), 'Hand must not be in progress')
         this._bettingRoundsCompleted = false
         this._roundOfBetting = RoundOfBetting.PREFLOP
+        this._winners = []
         this.collectAnte()
         const firstAction = this.nextOrWrap(this.postBlinds())
         this.dealHoleCards()
@@ -229,6 +232,12 @@ export default class Dealer {
         }
     }
 
+    winners(): [SeatIndex, Hand, HoleCards][][] {
+        assert(!this.handInProgress(), 'Hand must not be in progress')
+
+        return this._winners
+    }
+
     showdown(): void {
         assert(this._roundOfBetting === RoundOfBetting.RIVER, 'Round of betting must be river')
         assert(!this.bettingRoundInProgress(), 'Betting round must not be in progress')
@@ -265,6 +274,13 @@ export default class Dealer {
                 const [seatIndex] = playerResult
                 this._players[seatIndex]?.addToStack(payout)
             })
+
+            this._winners.push(winningPlayerResults.map((playerResult: [SeatIndex, Hand]) => {
+                const [seatIndex] = playerResult
+                const holeCards = this._holeCards[seatIndex];
+
+                return [...playerResult, holeCards];
+            }))
 
             if (oddChips !== 0) {
                 // Distribute the odd chips to the first players, counting clockwise, after the dealer button

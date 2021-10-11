@@ -10,6 +10,7 @@ import { HoleCards } from 'types/hole-cards'
 import { Chips } from 'types/chips'
 import { bitCount } from '../util/bit'
 import Player from './player'
+import Hand from './hand'
 
 export enum AutomaticAction {
     FOLD = 1 << 0,
@@ -111,7 +112,7 @@ export default class Table {
 
         this._staged = new Array(this._numSeats).fill(false)
         this._automaticActions = new Array(this._numSeats).fill(null)
-        this._handPlayers = this._tablePlayers.map(player => player ? new Player(player) : null)
+        this._handPlayers = this._tablePlayers.map(player => player ? new Player(player.stack()) : null)
         this.incrementButton()
         this._deck.fillAndShuffle()
         this._communityCards = new CommunityCards()
@@ -211,6 +212,12 @@ export default class Table {
         this._dealer.showdown()
         this.updateTablePlayers()
         this.standUpBustedPlayers()
+    }
+
+    winners(): [SeatIndex, Hand, HoleCards][][] {
+        assert(!this.handInProgress(), 'Hand must not be in progress')
+
+        return this._dealer?.winners() ?? []
     }
 
     automaticActions(): (AutomaticAction | null)[] {

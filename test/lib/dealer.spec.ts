@@ -5,7 +5,11 @@ import CommunityCards, { RoundOfBetting } from '../../src/lib/community-cards'
 import { SeatArray } from '../../src/types/seat-array'
 import Player from '../../src/lib/player'
 import Card, { CardRank, CardSuit } from '../../src/lib/card'
-import { shuffleForThreePlayersWithTwoWinners } from '../helper/card'
+import {
+    shuffleForThreePlayersWithTwoWinners,
+    shuffleForTwoPlayersWithFullHouseWinner,
+} from '../helper/card'
+import { HandRanking } from '../../src/lib/hand'
 
 describe('Dealer', () => {
     describe('Starting the hand', () => {
@@ -390,6 +394,87 @@ describe('Dealer', () => {
                 expect(players[0]?.stack()).toBe(500)
                 expect(players[1]?.stack()).toBe(500)
                 expect(players[2]?.stack()).toBe(2000)
+            })
+
+            test('reveal winner hand', () => {
+                const firstWinnerInFirstPot = dealer.winners()[0][0];
+                const [seatIndex, hand, holeCards] = firstWinnerInFirstPot;
+                expect(seatIndex).toBe(2)
+                expect(hand.ranking()).toBe(HandRanking.STRAIGHT_FLUSH)
+                expect(hand.strength()).toBe(8)
+                expect(hand.cards()).toEqual([
+                    new Card(8, 3),
+                    new Card(7, 3),
+                    new Card(6, 3),
+                    new Card(5, 3),
+                    new Card(4, 3),
+                ])
+                expect(holeCards).toEqual([
+                    new Card(8, 3),
+                    new Card(7, 3),
+                ])
+            })
+        })
+
+        describe('single winner with full house after full round', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
+            beforeEach(() => {
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck(shuffleForTwoPlayersWithFullHouseWinner)
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(1000)
+                players[1] = new Player(1000)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+
+                dealer.startHand()
+
+                dealer.actionTaken(Action.RAISE, 500)
+                dealer.actionTaken(Action.CALL)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.showdown()
+            })
+
+            test('pot has been divided', () => {
+                expect(players[0]?.stack()).toBe(1500)
+                expect(players[1]?.stack()).toBe(500)
+            })
+
+            test('reveal winner hand', () => {
+                const firstWinnerInFirstPot = dealer.winners()[0][0];
+                const [seatIndex, hand, holeCards] = firstWinnerInFirstPot;
+                expect(seatIndex).toBe(0)
+                expect(hand.ranking()).toBe(HandRanking.FULL_HOUSE)
+                expect(hand.strength()).toBe(83486)
+                expect(hand.cards()).toEqual([
+                    new Card(2, 3),
+                    new Card(2, 0),
+                    new Card(2, 1),
+                    new Card(12, 0),
+                    new Card(12, 3),
+                ])
+                expect(holeCards).toEqual([
+                    new Card(2, 3),
+                    new Card(2, 0),
+                ])
             })
         })
 

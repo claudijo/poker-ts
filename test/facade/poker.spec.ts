@@ -128,8 +128,8 @@ describe('Poker facade', () => {
         })
 
         test('folded bet is not excluded from table players', () => {
-            poker.actionTaken('call');
-            poker.actionTaken('fold');
+            poker.actionTaken('call')
+            poker.actionTaken('fold')
 
             expect(poker.seats()).toEqual([
                 { totalChips: 2000, stack: 1900, betSize: 100 },
@@ -154,6 +154,18 @@ describe('Poker facade', () => {
                 null,
                 null,
             ])
+        })
+
+        test('folded bet is cleared when starting new hand', () => {
+            poker.actionTaken('call')
+            poker.actionTaken('fold')
+            poker.actionTaken('fold')
+            poker.endBettingRound()
+            poker.showdown()
+            poker.startHand()
+
+            expect(poker.button()).toBe(1)
+            expect(poker.handPlayers()[1]?.betSize).toEqual(0)
         })
 
         describe('After first betting round', () => {

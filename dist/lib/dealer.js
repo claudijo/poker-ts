@@ -73,6 +73,7 @@ var Dealer = /** @class */ (function () {
         this._communityCards = communityCards;
         this._potManager = new pot_manager_1.default();
         this._holeCards = new Array(numSeats).fill(null);
+        this._winners = [];
         assert_1.default(deck.length === 52, 'Deck must be whole');
         assert_1.default(communityCards.cards().length === 0, 'No community cards should have been dealt');
     }
@@ -170,6 +171,7 @@ var Dealer = /** @class */ (function () {
         assert_1.default(!this.handInProgress(), 'Hand must not be in progress');
         this._bettingRoundsCompleted = false;
         this._roundOfBetting = community_cards_1.RoundOfBetting.PREFLOP;
+        this._winners = [];
         this.collectAnte();
         var firstAction = this.nextOrWrap(this.postBlinds());
         this.dealHoleCards();
@@ -229,6 +231,10 @@ var Dealer = /** @class */ (function () {
             // Now you call showdown()
         }
     };
+    Dealer.prototype.winners = function () {
+        assert_1.default(!this.handInProgress(), 'Hand must not be in progress');
+        return this._winners;
+    };
     Dealer.prototype.showdown = function () {
         var _this = this;
         assert_1.default(this._roundOfBetting === community_cards_1.RoundOfBetting.RIVER, 'Round of betting must be river');
@@ -267,6 +273,11 @@ var Dealer = /** @class */ (function () {
                 var seatIndex = playerResult[0];
                 (_a = _this._players[seatIndex]) === null || _a === void 0 ? void 0 : _a.addToStack(payout);
             });
+            this_1._winners.push(winningPlayerResults.map(function (playerResult) {
+                var seatIndex = playerResult[0];
+                var holeCards = _this._holeCards[seatIndex];
+                return __spreadArray(__spreadArray([], playerResult), [holeCards]);
+            }));
             if (oddChips !== 0) {
                 // Distribute the odd chips to the first players, counting clockwise, after the dealer button
                 var winners_1 = new Array(this_1._players.length).fill(null);

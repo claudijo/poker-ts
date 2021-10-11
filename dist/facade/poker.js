@@ -167,6 +167,20 @@ var Poker = /** @class */ (function () {
     Poker.prototype.showdown = function () {
         this._table.showdown();
     };
+    Poker.prototype.winners = function () {
+        return this._table.winners().map(function (potWinners) { return potWinners.map(function (winner) {
+            var seatIndex = winner[0], hand = winner[1], holeCards = winner[2];
+            return [
+                seatIndex,
+                {
+                    cards: hand.cards().map(cardMapper),
+                    ranking: hand.ranking(),
+                    strength: hand.strength(),
+                },
+                holeCards.map(cardMapper),
+            ];
+        }); });
+    };
     Poker.prototype.automaticActions = function () {
         return this._table.automaticActions().map(function (action) {
             return action === null

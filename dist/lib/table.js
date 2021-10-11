@@ -18,11 +18,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -103,7 +98,7 @@ var Table = /** @class */ (function () {
         }
         this._staged = new Array(this._numSeats).fill(false);
         this._automaticActions = new Array(this._numSeats).fill(null);
-        this._handPlayers = __spreadArray([], this._tablePlayers);
+        this._handPlayers = this._tablePlayers.map(function (player) { return player ? new player_1.default(player.stack()) : null; });
         this.incrementButton();
         this._deck.fillAndShuffle();
         this._communityCards = new community_cards_1.default();
@@ -183,6 +178,11 @@ var Table = /** @class */ (function () {
         this._dealer.showdown();
         this.updateTablePlayers();
         this.standUpBustedPlayers();
+    };
+    Table.prototype.winners = function () {
+        var _a, _b;
+        assert_1.default(!this.handInProgress(), 'Hand must not be in progress');
+        return (_b = (_a = this._dealer) === null || _a === void 0 ? void 0 : _a.winners()) !== null && _b !== void 0 ? _b : [];
     };
     Table.prototype.automaticActions = function () {
         assert_1.default(this.handInProgress(), 'Hand must be in progress');
@@ -365,7 +365,10 @@ var Table = /** @class */ (function () {
         for (var s = 0; s < this._numSeats; s++) {
             if (!this._staged[s] && this._handPlayers[s] !== null) {
                 assert_1.default(this._tablePlayers[s] !== null);
-                this._tablePlayers[s] = this._handPlayers[s];
+                var handPlayer = this._handPlayers[s];
+                if (handPlayer !== null) {
+                    this._tablePlayers[s] = new player_1.default(handPlayer);
+                }
             }
         }
     };
