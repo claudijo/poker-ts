@@ -112,7 +112,7 @@ export default class Table {
 
         this._staged = new Array(this._numSeats).fill(false)
         this._automaticActions = new Array(this._numSeats).fill(null)
-        this._handPlayers = this._tablePlayers.map(player => player ? new Player(player) : null)
+        this._handPlayers = this._tablePlayers.map(player => player ? new Player(player.stack()) : null)
         this.incrementButton()
         this._deck.fillAndShuffle()
         this._communityCards = new CommunityCards()
