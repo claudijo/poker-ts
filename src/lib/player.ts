@@ -5,7 +5,6 @@ import { isChips } from '../type-guards/chips'
 export default class Player {
     private _total: Chips = 0
     private _betSize: Chips = 0
-    private _excluded: boolean = false
 
     constructor(stack: Chips)
     constructor(player: Player)
