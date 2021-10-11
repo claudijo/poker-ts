@@ -1,12 +1,24 @@
 import assert from 'assert';
 import { Chips } from 'types/chips';
+import { isChips } from '../type-guards/chips'
 
 export default class Player {
     private _total: Chips = 0
     private _betSize: Chips = 0
 
-    constructor(stack: Chips) {
-        this._total = stack
+    constructor(stack: Chips)
+
+    constructor(player: Player)
+
+    constructor(arg: Chips | Player) {
+        if (isChips(arg)) {
+            this._total = arg
+        } else if (arg instanceof Player) {
+            this._total = arg._total
+            this._betSize = arg._betSize
+        } else {
+            throw new Error('Invalid argument')
+        }
     }
 
     stack(): Chips {

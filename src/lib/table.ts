@@ -111,7 +111,7 @@ export default class Table {
 
         this._staged = new Array(this._numSeats).fill(false)
         this._automaticActions = new Array(this._numSeats).fill(null)
-        this._handPlayers = [...this._tablePlayers]
+        this._handPlayers = this._tablePlayers.map(player => player ? new Player(player) : null)
         this.incrementButton()
         this._deck.fillAndShuffle()
         this._communityCards = new CommunityCards()
@@ -406,7 +406,10 @@ export default class Table {
         for (let s = 0; s < this._numSeats; s++) {
             if (!this._staged[s] && this._handPlayers[s] !== null) {
                 assert(this._tablePlayers[s] !== null)
-                this._tablePlayers[s] = this._handPlayers[s]
+                const handPlayer = this._handPlayers[s]
+                if (handPlayer !== null) {
+                    this._tablePlayers[s] = new Player(handPlayer)
+                }
             }
         }
     }
