@@ -156,7 +156,7 @@ describe('Poker facade', () => {
             ])
         })
 
-        test('Folded bet is cleared when starting new hand', () => {
+        test('folded bet is cleared when starting new hand', () => {
             poker.actionTaken('call')
             poker.actionTaken('fold')
             poker.actionTaken('fold')
