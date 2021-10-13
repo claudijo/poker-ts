@@ -213,12 +213,28 @@ describe('Poker facade', () => {
                 ])
             })
 
-            test('set automatic actions', () => {
+            test('set automatic action', () => {
                 poker.setAutomaticAction(2, 'call any')
                 expect(poker.automaticActions()).toEqual([
                     null,
                     null,
                     'call any',
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ])
+            })
+
+            test('reset automatic action', () => {
+                poker.setAutomaticAction(2, 'call any')
+                poker.setAutomaticAction(2, null)
+                expect(poker.automaticActions()).toEqual([
+                    null,
+                    null,
+                    null,
                     null,
                     null,
                     null,

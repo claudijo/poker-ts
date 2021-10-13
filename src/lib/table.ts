@@ -270,11 +270,11 @@ export default class Table {
         return legalActions
     }
 
-    setAutomaticAction(seat: SeatIndex, action: AutomaticAction) {
+    setAutomaticAction(seat: SeatIndex, action: AutomaticAction | null) {
         assert(this.canSetAutomaticAction(seat), 'Player must be allowed to set automatic actions')
         assert(seat !== this.playerToAct(), 'Player must not be the player to act')
-        assert(bitCount(action) === 1, 'Player must pick one automatic action')
-        assert(action & this.legalAutomaticActions(seat), 'Given automatic action must be legal')
+        assert(action === null || bitCount(action) === 1, 'Player must pick one automatic action or null')
+        assert(action === null || action & this.legalAutomaticActions(seat), 'Given automatic action must be legal')
         assert(this._automaticActions !== undefined)
 
         this._automaticActions[seat] = action

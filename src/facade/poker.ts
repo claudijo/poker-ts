@@ -208,8 +208,8 @@ export default class Poker {
         return automaticActionFlagToStringArray(automaticActionFlag)
     }
 
-    setAutomaticAction(seatIndex: number, action: AutomaticAction): void {
-        const automaticAction = stringToAutomaticActionFlag(action)
+    setAutomaticAction(seatIndex: number, action: AutomaticAction | null): void {
+        const automaticAction = action === null ? action : stringToAutomaticActionFlag(action)
         this._table.setAutomaticAction(seatIndex, automaticAction)
     }
 

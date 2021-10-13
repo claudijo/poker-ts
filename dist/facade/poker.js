@@ -196,7 +196,7 @@ var Poker = /** @class */ (function () {
         return automaticActionFlagToStringArray(automaticActionFlag);
     };
     Poker.prototype.setAutomaticAction = function (seatIndex, action) {
-        var automaticAction = stringToAutomaticActionFlag(action);
+        var automaticAction = action === null ? action : stringToAutomaticActionFlag(action);
         this._table.setAutomaticAction(seatIndex, automaticAction);
     };
     Poker.prototype.sitDown = function (seatIndex, buyIn) {

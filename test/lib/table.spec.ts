@@ -213,6 +213,11 @@ describe('Table', () => {
                     expect(table.automaticActions()[2]).toBe(AutomaticAction.CALL)
                     expect(table.automaticActions()[3]).toBe(AutomaticAction.ALL_IN)
                 })
+
+                test('reset automatic action', () => {
+                    table.setAutomaticAction(2, null)
+                    expect(table.automaticActions()[2]).toBe(null)
+                })
             })
         })
 

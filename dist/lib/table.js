@@ -231,8 +231,8 @@ var Table = /** @class */ (function () {
     Table.prototype.setAutomaticAction = function (seat, action) {
         assert_1.default(this.canSetAutomaticAction(seat), 'Player must be allowed to set automatic actions');
         assert_1.default(seat !== this.playerToAct(), 'Player must not be the player to act');
-        assert_1.default(bit_1.bitCount(action) === 1, 'Player must pick one automatic action');
-        assert_1.default(action & this.legalAutomaticActions(seat), 'Given automatic action must be legal');
+        assert_1.default(action === null || bit_1.bitCount(action) === 1, 'Player must pick one automatic action or null');
+        assert_1.default(action === null || action & this.legalAutomaticActions(seat), 'Given automatic action must be legal');
         assert_1.default(this._automaticActions !== undefined);
         this._automaticActions[seat] = action;
     };
