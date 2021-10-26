@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Texas Hold 'Em Poker table model with convenience features for running real games.",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rimraf dist && tsc",
     "start": "node dist/index.js",
@@ -10,6 +13,14 @@
     "test": "jest --watch",
     "lint": "tslint --project tsconfig.json",
     "coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/claudijo/poker-ts.git"
+  },
+  "homepage": "https://github.com/claudijo/poker-ts",
+  "bugs": {
+    "url": "https://github.com/claudijo/poker-ts/issues"
   },
   "keywords": [
     "poker",
