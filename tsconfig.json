@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
+    "declaration": true,
     "outDir": "dist",
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
