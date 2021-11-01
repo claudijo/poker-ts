@@ -463,13 +463,13 @@ describe('Dealer', () => {
                 const [seatIndex, hand, holeCards] = firstWinnerInFirstPot;
                 expect(seatIndex).toBe(0)
                 expect(hand.ranking()).toBe(HandRanking.FULL_HOUSE)
-                expect(hand.strength()).toBe(83486)
+                expect(hand.strength()).toBe(57122)
                 expect(hand.cards()).toEqual([
                     new Card(2, 3),
                     new Card(2, 0),
                     new Card(2, 1),
-                    new Card(12, 0),
-                    new Card(12, 3),
+                    new Card(0, 0),
+                    new Card(0, 3),
                 ])
                 expect(holeCards).toEqual([
                     new Card(2, 3),
