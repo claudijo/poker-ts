@@ -171,7 +171,7 @@ var Hand = /** @class */ (function () {
             ranking = HandRanking.FOUR_OF_A_KIND;
         }
         else if (count === 3) {
-            var tmp = Hand.nextRank(cards.slice(5));
+            var tmp = Hand.nextRank(cards.slice(-4));
             if (tmp.count === 2) {
                 ranking = HandRanking.FULL_HOUSE;
             }
@@ -180,7 +180,7 @@ var Hand = /** @class */ (function () {
             }
         }
         else if (count === 2) {
-            var tmp = Hand.nextRank(cards.slice(cards.length - 5));
+            var tmp = Hand.nextRank(cards.slice(-5));
             if (tmp.count === 2) {
                 ranking = HandRanking.TWO_PAIR;
             }
