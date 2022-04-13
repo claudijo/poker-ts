@@ -2,7 +2,7 @@
 Poker-ts is a poker game engine that can be used to serve Texas hold'em games for real players.
 
 ## Acknowledgment
-This library is a TypeScript port of the [C++ Poker library](https://github.com/JankoDedic/poker) written by Janko Dedic.
+This library is a TypeScript port of the [C++ Poker library](https://github.com/JankoDedic/poker) written by Janko Dedic. Note that minor differences in the API might exist.
 
 ## Example Usage
 Poker-ts exports a `Poker.Table` class that represents a state machine and models a real-world poker table. 
