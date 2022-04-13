@@ -35,6 +35,8 @@ while (table.isHandInProgress()) {
     table.showdown()
   }
 }
+
+// 🎉 🎉 🎉 Congrats to the `table.winners()` 🎉 🎉 🎉 
 ```
 ## API
 ### Custom types and enums used in documentation below
@@ -176,7 +178,7 @@ Perform a showdown. Evaluate the players' hands and pay the winners. (Betting ro
 ### winners()
 `Poker.Table.prototype.winners(): [SeatIndex, { cards: Card[], ranking: HandRanking, strength: number }, Card[]][][]`
 
-Returns the winning hands after showdown. (Hand must not be in progress.)
+Returns the winning hands for each pot after showdown. (Hand must not be in progress.)
 
 ### automaticActions()
 `Poker.Table.prototype.automaticActions(): (AutomaticAction | null)[]`
