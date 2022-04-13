@@ -2,8 +2,7 @@ import { Chips } from 'types/chips';
 export default class Player {
     private _total;
     private _betSize;
-    constructor(stack: Chips);
-    constructor(player: Player);
+    constructor(arg: Chips | Player);
     stack(): Chips;
     betSize(): Chips;
     totalChips(): Chips;

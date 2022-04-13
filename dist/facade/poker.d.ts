@@ -61,7 +61,7 @@ export default class Poker {
         ranking: HandRanking;
         strength: number;
     }, Card[]][][];
-    automaticActions(): any;
+    automaticActions(): (AutomaticAction | null)[];
     canSetAutomaticActions(seatIndex: number): boolean;
     legalAutomaticActions(seatIndex: number): AutomaticAction[];
     setAutomaticAction(seatIndex: number, action: AutomaticAction | null): void;

@@ -191,7 +191,7 @@ export default class Poker {
         }))
     }
 
-    automaticActions(): any {
+    automaticActions(): (AutomaticAction | null)[] {
         return this._table.automaticActions().map(action => {
             return action === null
                 ? null

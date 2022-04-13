@@ -6,10 +6,6 @@ export default class Player {
     private _total: Chips = 0
     private _betSize: Chips = 0
 
-    constructor(stack: Chips)
-
-    constructor(player: Player)
-
     constructor(arg: Chips | Player) {
         if (isChips(arg)) {
             this._total = arg
