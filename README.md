@@ -24,7 +24,7 @@ while (table.isHandInProgress()) {
     const seatIndex = table.playerToAct();
     
     // Consumer of the library must implment logic for getting a players action and bet size
-    const [action, betSize] = getPlayerActionSomeHow(seatIndex);
+    const [action, betSize] = getPlayerActionSomehow(seatIndex);
     
     table.actionTaken(action, betSize);
   }
