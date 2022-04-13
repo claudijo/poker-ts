@@ -23,7 +23,7 @@ while (table.isHandInProgress()) {
   while (table.isBettingRoundInProgress()) {
     const seatIndex = table.playerToAct();
     
-    // Consumer of the library must implment logic for getting a players action and bet size
+    // Get `action` and possibly `betSize` in some way
     const [action, betSize] = getPlayerActionSomehow(seatIndex);
     
     table.actionTaken(action, betSize);
