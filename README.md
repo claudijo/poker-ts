@@ -4,8 +4,8 @@ Poker-ts is a poker game engine that can be used to serve Texas hold'em games fo
 ## Acknowledgment
 This library is a TypeScript port of the [C++ Poker library](https://github.com/JankoDedic/poker) written by Janko Dedic.
 
-## Usage
-Poker-ts exports a `Poker.Table` class that represents a state machine and models a real-world poker table. See a short usage example below.
+## Example Usage
+Poker-ts exports a `Poker.Table` class that represents a state machine and models a real-world poker table. Short example below.
 
 ```js
 const Poker = require('poker-ts');
@@ -36,7 +36,7 @@ while (table.isHandInProgress()) {
 }
 ```
 ## API
-### Custom types and enums as used in documentation below
+### Custom types and enums used in documentation below
 ```ts
 type Card = {
     rank: '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'A'
@@ -67,88 +67,144 @@ enum HandRanking {
     ROYAL_FLUSH,
 }
 ```
-### `Poker.Table(forcedBets: { ante?: number, bigBlind: number, smallBlind: number }, numSeats?: number)`
+### Constructor 
+`Poker.Table(forcedBets: { ante?: number, bigBlind: number, smallBlind: number }, numSeats?: number)`
+
 Creates and instance of the poker table object.
 
-### `Poker.Table.prototype.playerToAct(): number`
+### playerToAct()
+`Poker.Table.prototype.playerToAct(): number`
+
 Returns the seat index of the player to act. (Betting round must be in progress.)
 
-### `Poker.Table.prototype.button(): number`
+### button()
+`Poker.Table.prototype.button(): number`
+
 Returns the seat index of the button. (Hand must be in progress.)
 
-### `Poker.Table.prototype.seats(): ({ totalChips: number, stack: number, betSize: number } | null)[]`
+### seats()
+`Poker.Table.prototype.seats(): ({ totalChips: number, stack: number, betSize: number } | null)[]`
+
 Returns the state of the players seated at the table.
 
-### `Poker.Table.prototype.handPlayers(): ({ totalChips: number, stack: number, betSize: number } | null)[]`
+### handPlayers()
+`Poker.Table.prototype.handPlayers(): ({ totalChips: number, stack: number, betSize: number } | null)[]`
+
 Returns the state of the players currently in the hand. (Hand must be in progress.)
 
-### `Poker.Table.prototype.numActivePlayers(): number`
+### numActivePlayers()
+`Poker.Table.prototype.numActivePlayers(): number`
+
 Returns the number of active players in the active hand. (Hand must be in progress.)
 
-### `Poker.Table.prototype.pots(): { size: number, eligiblePlayers: number[] }[]`
+### pots()
+`Poker.Table.prototype.pots(): { size: number, eligiblePlayers: number[] }[]`
+
 Returns the state of all pots in the active hand.
 
-### `Poker.Table.prototype.forcedBets(): { ante: number, bigBlind: number, smallBlind: number }`
+### forcedBets()
+`Poker.Table.prototype.forcedBets(): { ante: number, bigBlind: number, smallBlind: number }`
+
 Returns the current bet structure at the table.
 
-### `Poker.Table.prototype.setForcedBets(forcedBets: { ante?: number, bigBlind: number, smallBlind: number }): void`
+### setForcedBets(forcedBets)
+`Poker.Table.prototype.setForcedBets(forcedBets: { ante?: number, bigBlind: number, smallBlind: number }): void`
+
 Modifies the bet structure of the table. (Hand must not be in progress.)
 
-### `Poker.Table.prototype.numSeats(): number`
+### numSeats()
+`Poker.Table.prototype.numSeats(): number`
+
 Returns the number of seats at the table.
 
-### `Poker.Table.prototype.startHand(): void`
+### startHand()
+`Poker.Table.prototype.startHand(): void`
+
 Start a new hand by collecting ante, placing blinds and dealing cards. (Hand must not be in progress and there must be at least two players seated at the table.)
 
-### `Poker.Table.prototype.isHandInProgress(): boolean`
+### isHandInProgress()
+`Poker.Table.prototype.isHandInProgress(): boolean`
+
 Returns `true` if hand is in progress.
 
-### `Poker.Table.prototype.isBettingRoundInProgress(): boolean`
+### isBettingRoundInProgress()
+`Poker.Table.prototype.isBettingRoundInProgress(): boolean`
+
 Returns `true` if betting round is in progress. (Hand must be in progress.)
 
-### `Poker.Table.prototype.areBettingRoundsCompleted(): boolean`
+### areBettingRoundsCompleted()
+`Poker.Table.prototype.areBettingRoundsCompleted(): boolean`
+
 Returns `true` if all betting rounds are completed. (Hand must be in progress.)
 
-### `Poker.Table.prototype.roundOfBetting(): 'preflop' | 'flop' | 'turn' | 'river'`
+### roundOfBetting()
+`Poker.Table.prototype.roundOfBetting(): 'preflop' | 'flop' | 'turn' | 'river'`
+
 Returns the current round of betting. (Hand must be in progress)
 
-### `Poker.Table.prototype.communityCards(): : Card[]`
+### communityCards()
+`Poker.Table.prototype.communityCards(): : Card[]`
+
 Returns the community cards for the active hand. (Hand must be in progress.)
 
-### `Poker.Table.prototype.legalActions(): { actions: Action[], chipRange?: ChipRange }`
+### legalActions()
+`Poker.Table.prototype.legalActions(): { actions: Action[], chipRange?: ChipRange }`
+
 Returns legal actions for the player to act. (Betting round must be in progress.)
 
-### `Poker.Table.prototype.holeCards(): (Card[] | null)[]`
+### holeCards()
+`Poker.Table.prototype.holeCards(): (Card[] | null)[]`
+
 Returns the hole cards for the active hand. (Hand must be in progress or showdown must have ended.)
 
-### `Poker.Table.prototype.actionTaken(action: Action, betSize?: number)`
+### actionTaken(action, betSize)
+`Poker.Table.prototype.actionTaken(action: Action, betSize?: number)`
+
 Indicate that the player to act has taken an action. (Betting round must be in progress)
 
-### `Poker.Table.prototype.endBettingRound(): void`
+### endBettingRound()
+`Poker.Table.prototype.endBettingRound(): void`
+
 End the current betting round which is no longer in progress. Collect the bets and form the pots. (Betting round must not be in progress and betting rounds must not be completed.)
 
-### `Poker.Table.prototype.showdown(): void`
+### showdown()
+`Poker.Table.prototype.showdown(): void`
+
 Perform a showdown. Evaluate the players' hands and pay the winners. (Betting round must not be in progress and betting rounds must be completed.)
 
-### `Poker.Table.prototype.winners(): [SeatIndex, { cards: Card[], ranking: HandRanking, strength: number }, Card[]][][]`
+### winners()
+`Poker.Table.prototype.winners(): [SeatIndex, { cards: Card[], ranking: HandRanking, strength: number }, Card[]][][]`
+
 Returns the winning hands after showdown. (Hand must not be in progress.)
 
-### `Poker.Table.prototype.automaticActions(): (AutomaticAction | null)[]`
+### automaticActions()
+`Poker.Table.prototype.automaticActions(): (AutomaticAction | null)[]`
+
 Returns the toggled automatic actions at the table. (Hand must be in progress)
 
-### `Poker.Table.prototype.canSetAutomaticActions(seatIndex: number): boolean`
+### canSetAutomaticActions(seatIndex)
+`Poker.Table.prototype.canSetAutomaticActions(seatIndex: number): boolean`
+
 Returns `true` if the player with a given `seatIndex` can set an automatic action. (Betting round must be in progress.)
 
-### `Poker.Table.prototype.legalAutomaticActions(seatIndex: number): AutomaticAction[]`
+### legalAutomaticActions(seatIndex)
+`Poker.Table.prototype.legalAutomaticActions(seatIndex: number): AutomaticAction[]`
+
 Returns an array of legal automatic actions for a player with a given `seatIndex`. (Player must be allowed to set automatic actions.)
 
-### `Poker.Table.prototype.setAutomaticAction(seatIndex: number, action: AutomaticAction | null): void`
+### setAutomaticAction(seatIndex, action)
+`Poker.Table.prototype.setAutomaticAction(seatIndex: number, action: AutomaticAction | null): void`
+
 Set the automatic action for a given player. (Player must be allowed to set automatic actions and player must not be the player to act.)
 
-### `Poker.Table.prototype.sitDown(seatIndex: number, buyIn: number): void`
+### sitDown(seatIndex, buyIn)
+`Poker.Table.prototype.sitDown(seatIndex: number, buyIn: number): void`
+
 Indicate that a player took a given seat with a given buy-in. (Given seat must not be occupied.)
 
-### `Poker.Table.prototype.standUp(seatIndex: number): void`
+### standUp(seatIndex)
+`Poker.Table.prototype.standUp(seatIndex: number): void`
+
 Indicate that a player has left the table. (Given seat must be occupied.)
 
 ## License
