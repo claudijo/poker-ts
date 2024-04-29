@@ -8,6 +8,7 @@ import Card, { CardRank, CardSuit } from '../../src/lib/card'
 import {
     shuffleForThreePlayersWithTwoWinners,
     shuffleForTwoPlayersWithFullHouseWinner,
+    shuffleForTwoPlayersDraw,
 } from '../helper/card'
 import { HandRanking } from '../../src/lib/hand'
 
@@ -357,6 +358,7 @@ describe('Dealer', () => {
 
             beforeEach(() => {
                 forcedBets = { blinds: { big: 50, small: 25 } }
+                // tslint:disable-next-line:no-empty
                 deck = new Deck(() => {})
                 communityCards = new CommunityCards()
                 players = new Array(9).fill(null)
@@ -478,6 +480,49 @@ describe('Dealer', () => {
             })
         })
 
+        describe('all players winners', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
+            beforeEach(() => {
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck(shuffleForTwoPlayersDraw)
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(1000)
+                players[1] = new Player(1000)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+
+                dealer.startHand()
+
+                dealer.actionTaken(Action.RAISE, 500)
+                dealer.actionTaken(Action.CALL)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.showdown()
+            })
+
+            test('pot has been divided equally', () => {
+                expect(players[0]?.stack()).toBe(1000)
+                expect(players[1]?.stack()).toBe(1000)
+            })
+        })
+
         describe('two winners share odd pot', () => {
             let forcedBets: ForcedBets
             let deck: Deck
@@ -560,7 +605,7 @@ describe('Dealer', () => {
                     new Card(CardRank.T, CardSuit.SPADES),
                 ])
 
-                //...
+                // ...
             })
         })
 

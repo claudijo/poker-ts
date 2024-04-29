@@ -1,6 +1,6 @@
 import Card, { CardRank, CardSuit } from '../../src/lib/card'
 
-export function makeCards(description: string): Array<Card> {
+export function makeCards(description: string): Card[] {
     const parts = description.split(/\s+/)
     return parts.map(part => {
         const rank = part[0]
@@ -41,6 +41,15 @@ export function shuffleForTwoPlayersWithFullHouseWinner(array: Card[]) {
         '4s 4c' + // First player
         ' Kc 5h' + // Second player
         ' Ac Ks 4d 2c 2s' // Community cards
+    )
+    cards.forEach((card, index) => array[51 - index] = card)
+}
+
+export function shuffleForTwoPlayersDraw(array: Card[]) {
+    const cards = makeCards(
+        'Td 9h' + // First player
+        ' Th 3c' + // Second player
+        ' Qh Qc As Tc 5h' // Community cards
     )
     cards.forEach((card, index) => array[51 - index] = card)
 }
