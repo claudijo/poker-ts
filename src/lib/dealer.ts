@@ -265,7 +265,7 @@ export default class Dealer {
             const lastWinnerIndex = findIndexAdjacent(playerResults, ([, first], [, second]) => {
                 return Hand.compare(first, second) !== 0
             })
-            const numberOfWinners = lastWinnerIndex === -1 ? 1 : lastWinnerIndex + 1
+            const numberOfWinners = lastWinnerIndex === -1 ? playerResults.length : lastWinnerIndex + 1
             let oddChips = pot.size() % numberOfWinners
             const payout = (pot.size() - oddChips) / numberOfWinners
             const winningPlayerResults = playerResults.slice(0, numberOfWinners)

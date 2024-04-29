@@ -264,7 +264,7 @@ var Dealer = /** @class */ (function () {
                 var second = _b[1];
                 return hand_1.default.compare(first, second) !== 0;
             });
-            var numberOfWinners = lastWinnerIndex === -1 ? 1 : lastWinnerIndex + 1;
+            var numberOfWinners = lastWinnerIndex === -1 ? playerResults.length : lastWinnerIndex + 1;
             var oddChips = pot.size() % numberOfWinners;
             var payout = (pot.size() - oddChips) / numberOfWinners;
             var winningPlayerResults = playerResults.slice(0, numberOfWinners);
