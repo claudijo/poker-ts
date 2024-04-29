@@ -5,6 +5,7 @@
   ],
   "jsRules": {},
   "rules": {
+    "no-string-literal": false,
     "no-console": true,
     "no-bitwise": false,
     "max-classes-per-file": false

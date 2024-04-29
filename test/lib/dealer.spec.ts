@@ -357,6 +357,7 @@ describe('Dealer', () => {
 
             beforeEach(() => {
                 forcedBets = { blinds: { big: 50, small: 25 } }
+                // tslint:disable-next-line:no-empty
                 deck = new Deck(() => {})
                 communityCards = new CommunityCards()
                 players = new Array(9).fill(null)
@@ -560,7 +561,7 @@ describe('Dealer', () => {
                     new Card(CardRank.T, CardSuit.SPADES),
                 ])
 
-                //...
+                // ...
             })
         })
 

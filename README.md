@@ -73,7 +73,7 @@ enum HandRanking {
 ### Constructor 
 `Poker.Table(forcedBets: { ante?: number, bigBlind: number, smallBlind: number }, numSeats?: number)`
 
-Creates and instance of the poker table object.
+Creates an instance of the poker table object.
 
 ### playerToAct()
 `Poker.Table.prototype.playerToAct(): number`
