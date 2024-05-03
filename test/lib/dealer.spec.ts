@@ -1,16 +1,16 @@
-import Dealer, { Action } from '../../src/lib/dealer'
-import { ForcedBets } from '../../src/types/forced-bets'
+import Dealer, {Action} from '../../src/lib/dealer'
+import {ForcedBets} from '../../src/types/forced-bets'
 import Deck from '../../src/lib/deck'
-import CommunityCards, { RoundOfBetting } from '../../src/lib/community-cards'
-import { SeatArray } from '../../src/types/seat-array'
+import CommunityCards, {RoundOfBetting} from '../../src/lib/community-cards'
+import {SeatArray} from '../../src/types/seat-array'
 import Player from '../../src/lib/player'
-import Card, { CardRank, CardSuit } from '../../src/lib/card'
+import Card, {CardRank, CardSuit} from '../../src/lib/card'
 import {
     shuffleForThreePlayersWithTwoWinners,
-    shuffleForTwoPlayersWithFullHouseWinner,
     shuffleForTwoPlayersDraw,
+    shuffleForTwoPlayersWithFullHouseWinner,
 } from '../helper/card'
-import { HandRanking } from '../../src/lib/hand'
+import {HandRanking} from '../../src/lib/hand'
 
 describe('Dealer', () => {
     describe('Starting the hand', () => {
@@ -20,11 +20,57 @@ describe('Dealer', () => {
 
         beforeEach(() => {
             forcedBets = { blinds: { big: 50, small: 25 } }
-            deck = new Deck()
+            // tslint:disable-next-line:no-empty
+            deck = new Deck(() => {})
             communityCards = new CommunityCards()
         })
 
-        describe('Given: A hand with two players who can cover their blinds', () => {
+        describe('A hand with with two players where the big blind has just enough to cover the blind', () => {
+            let players: SeatArray
+            let dealer: Dealer
+
+            beforeEach(() => {
+                players = new Array(9).fill(null)
+                players[0] = new Player(100)
+                players[1] = new Player(50)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+
+                dealer.startHand()
+            })
+
+            test('Betting round should be in progress', () => {
+                expect(dealer.bettingRoundInProgress()).toBeTruthy()
+            })
+
+            test('Small blind should be allowed to fold, call, or raise', () => {
+                const { action } = dealer.legalActions()
+                expect(action & Action.FOLD).toBeTruthy()
+                expect(action & Action.CHECK).toBeFalsy()
+                expect(action & Action.CALL).toBeTruthy()
+                expect(action & Action.BET).toBeFalsy()
+                expect(action & Action.RAISE).toBeTruthy()
+            })
+
+            test('Betting round should still be in progress after small blind calls and big blind should be allowed to fold or check', () => {
+                dealer.actionTaken(Action.CALL)
+
+                const { action } = dealer.legalActions()
+                expect(action & Action.FOLD).toBeTruthy()
+                expect(action & Action.CHECK).toBeTruthy()
+                expect(action & Action.CALL).toBeFalsy()
+                expect(action & Action.BET).toBeFalsy()
+                expect(action & Action.RAISE).toBeFalsy()
+            })
+
+            test('Betting round and should not be in progress after small blind calls and big blind checks', () => {
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.CHECK)
+
+                expect(dealer.bettingRoundInProgress()).toBeFalsy()
+            })
+        })
+
+        describe('A hand with two players who can cover their blinds', () => {
             let players: SeatArray
             let dealer: Dealer
             beforeEach(() => {

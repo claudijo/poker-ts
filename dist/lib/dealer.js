@@ -138,13 +138,17 @@ var Dealer = /** @class */ (function () {
         assert_1.default(player !== null);
         if (this._bettingRound.biggestBet() - player.betSize() === 0) {
             actionRange.action |= Action.CHECK;
-            assert_1.default(actions.canRaise); // If you can check, you can always bet or raise.
-            // If this guy can check, with his existing bet_size, he is the big blind.
-            if (player.betSize() > 0) {
-                actionRange.action |= Action.RAISE;
-            }
-            else {
-                actionRange.action |= Action.BET;
+            // Typically you can always bet or raise if you can check. Exception is if you are the big blind and have no
+            // chips left after the blind has been paid, in which case you should be allowed to check but not bet or
+            // raise.
+            if (actions.canRaise) {
+                // If this guy can check, with his existing bet_size, he is the big blind.
+                if (player.betSize() > 0) {
+                    actionRange.action |= Action.RAISE;
+                }
+                else {
+                    actionRange.action |= Action.BET;
+                }
             }
         }
         else {
@@ -173,9 +177,10 @@ var Dealer = /** @class */ (function () {
         this._roundOfBetting = community_cards_1.RoundOfBetting.PREFLOP;
         this._winners = [];
         this.collectAnte();
-        var firstAction = this.nextOrWrap(this.postBlinds());
+        var bigBlindSeat = this.postBlinds();
+        var firstAction = this.nextOrWrap(bigBlindSeat);
         this.dealHoleCards();
-        if (this._players.filter(function (player) { return player !== null && player.stack() !== 0; }).length > 1) {
+        if (this._players.filter(function (player, seat) { return player !== null && (player.stack() !== 0 || seat === bigBlindSeat); }).length > 1) {
             this._bettingRound = new betting_round_1.default(__spreadArray([], this._players), firstAction, this._forcedBets.blinds.big, this._forcedBets.blinds.big);
         }
         this._handInProgress = true;
@@ -223,7 +228,7 @@ var Dealer = /** @class */ (function () {
             this._players = (_d = (_c = this._bettingRound) === null || _c === void 0 ? void 0 : _c.players()) !== null && _d !== void 0 ? _d : [];
             this._bettingRound = new betting_round_1.default(__spreadArray([], this._players), this.nextOrWrap(this._button), this._forcedBets.blinds.big);
             this.dealCommunityCards();
-            assert_1.default(this._bettingRoundsCompleted === false);
+            assert_1.default(!this._bettingRoundsCompleted);
         }
         else {
             assert_1.default(this._roundOfBetting === community_cards_1.RoundOfBetting.RIVER);

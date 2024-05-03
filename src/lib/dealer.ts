@@ -10,7 +10,7 @@ import { HoleCards } from 'types/hole-cards'
 import PotManager from './pot-manager'
 import assert from 'assert'
 import Pot from './pot'
-import Hand, { HandRanking } from './hand'
+import Hand from './hand'
 import { findIndexAdjacent, nextOrWrap } from '../util/array'
 import Card from './card'
 
@@ -135,13 +135,16 @@ export default class Dealer {
         assert(player !== null)
         if (this._bettingRound.biggestBet() - player.betSize() === 0) {
             actionRange.action |= Action.CHECK
-            assert(actions.canRaise) // If you can check, you can always bet or raise.
-
-            // If this guy can check, with his existing bet_size, he is the big blind.
-            if (player.betSize() > 0) {
-                actionRange.action |= Action.RAISE
-            } else {
-                actionRange.action |= Action.BET
+            // Typically you can always bet or raise if you can check. Exception is if you are the big blind and have no
+            // chips left after the blind has been paid, in which case you should be allowed to check but not bet or
+            // raise.
+            if (actions.canRaise) {
+                // If this guy can check, with his existing bet_size, he is the big blind.
+                if (player.betSize() > 0) {
+                    actionRange.action |= Action.RAISE
+                } else {
+                    actionRange.action |= Action.BET
+                }
             }
         } else {
             actionRange.action |= Action.CALL
@@ -175,9 +178,10 @@ export default class Dealer {
         this._roundOfBetting = RoundOfBetting.PREFLOP
         this._winners = []
         this.collectAnte()
-        const firstAction = this.nextOrWrap(this.postBlinds())
+        const bigBlindSeat = this.postBlinds()
+        const firstAction = this.nextOrWrap(bigBlindSeat)
         this.dealHoleCards()
-        if (this._players.filter(player => player !== null && player.stack() !== 0).length > 1) {
+        if (this._players.filter((player, seat) => player !== null && (player.stack() !== 0 || seat === bigBlindSeat)).length > 1) {
             this._bettingRound = new BettingRound([...this._players], firstAction, this._forcedBets.blinds.big, this._forcedBets.blinds.big)
         }
         this._handInProgress = true
@@ -224,7 +228,7 @@ export default class Dealer {
             this._players = this._bettingRound?.players() ?? []
             this._bettingRound = new BettingRound([...this._players], this.nextOrWrap(this._button), this._forcedBets.blinds.big)
             this.dealCommunityCards()
-            assert(this._bettingRoundsCompleted === false)
+            assert(!this._bettingRoundsCompleted)
         } else {
             assert(this._roundOfBetting === RoundOfBetting.RIVER)
             this._bettingRoundsCompleted = true
