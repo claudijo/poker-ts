@@ -53,7 +53,7 @@ export default class Poker {
         chipRange?: ChipRange;
     };
     holeCards(): (Card[] | null)[];
-    actionTaken(action: 'fold' | 'check' | 'call' | 'bet' | ' raise', betSize?: number): void;
+    actionTaken(action: 'fold' | 'check' | 'call' | 'bet' | 'raise', betSize?: number): void;
     endBettingRound(): void;
     showdown(): void;
     winners(): [SeatIndex, {
