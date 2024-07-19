@@ -7,13 +7,13 @@ import ChipRange from '../lib/chip-range'
 import { SeatIndex } from 'types/seat-index'
 import { HandRanking } from '../lib/hand'
 
-type Card = {
+export type Card = {
     rank: '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'A'
     suit: 'clubs' | 'diamonds' | 'hearts' | 'spades'
 }
 
-type AutomaticAction = 'fold' | 'check/fold' | 'check' | 'call' | 'call any' | 'all-in'
-type Action = 'fold' | 'check' | 'call' | 'bet' | 'raise'
+export type AutomaticAction = 'fold' | 'check/fold' | 'check' | 'call' | 'call any' | 'all-in'
+export type Action = 'fold' | 'check' | 'call' | 'bet' | 'raise'
 
 const cardMapper: (card: { rank: CardRank, suit: CardSuit }) => Card = card => ({
     // @ts-ignore
