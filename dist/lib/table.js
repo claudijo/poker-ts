@@ -346,6 +346,10 @@ var Table = /** @class */ (function () {
         if (this._buttonSetManually) {
             this._buttonSetManually = false;
             this._firstTimeButton = false;
+            this._button = this._handPlayers[this._button]
+                ? this._button
+                : this._handPlayers.findIndex(function (player) { return player !== null; });
+            assert_1.default(this._button !== -1);
         }
         else if (this._firstTimeButton) {
             var seat = this._handPlayers.findIndex(function (player) { return player !== null; });

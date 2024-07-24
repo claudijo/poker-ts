@@ -124,8 +124,8 @@ var Poker = /** @class */ (function () {
     Poker.prototype.numSeats = function () {
         return this._table.numSeats();
     };
-    Poker.prototype.startHand = function () {
-        this._table.startHand();
+    Poker.prototype.startHand = function (seat) {
+        this._table.startHand(seat);
     };
     Poker.prototype.isHandInProgress = function () {
         return this._table.handInProgress();

@@ -42,7 +42,7 @@ export default class Poker {
         smallBlind: number;
     }): void;
     numSeats(): number;
-    startHand(): void;
+    startHand(seat?: number): void;
     isHandInProgress(): boolean;
     isBettingRoundInProgress(): boolean;
     areBettingRoundsCompleted(): boolean;

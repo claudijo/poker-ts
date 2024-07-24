@@ -120,10 +120,12 @@ Modifies the bet structure of the table. (Hand must not be in progress.)
 
 Returns the number of seats at the table.
 
-### startHand()
-`Poker.Table.prototype.startHand(): void`
+### startHand(seat?: number)
+`Poker.Table.prototype.startHand(seat?: number)): void`
 
-Start a new hand by collecting ante, placing blinds and dealing cards. (Hand must not be in progress and there must be at least two players seated at the table.)
+Start a new hand by collecting ante, placing blinds and dealing cards. (Hand must not be in progress and there must be at least two players seated at the table.) 
+
+Optionally set dealer button seat. If seat is invalid, button will be placed at first hand player.
 
 ### isHandInProgress()
 `Poker.Table.prototype.isHandInProgress(): boolean`

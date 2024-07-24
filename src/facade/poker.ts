@@ -122,8 +122,8 @@ export default class Poker {
         return this._table.numSeats()
     }
 
-    startHand(): void {
-        this._table.startHand()
+    startHand(seat?: number): void {
+        this._table.startHand(seat)
     }
 
     isHandInProgress(): boolean {

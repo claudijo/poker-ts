@@ -265,9 +265,31 @@ describe('Poker facade', () => {
                     poker.showdown()
                     expect(poker.isHandInProgress()).toBeFalsy()
                 })
+
+                describe("Starting new round", () => {
+                    beforeEach(() => {
+                        poker.showdown()
+                    })
+
+                    test("expect dealer button to move", () => {
+                        poker.startHand()
+                        expect(poker.button()).toBe(1)
+                        expect(poker.playerToAct()).toBe(1)
+                    })
+
+                    test("set dealer explicitly", () => {
+                        poker.startHand(2)
+                        expect(poker.button()).toBe(2)
+                        expect(poker.playerToAct()).toBe(2)
+                    })
+
+                    test("setting dealer explicitly to non hand player should reset dealer", () => {
+                        poker.startHand(10)
+                        expect(poker.button()).toBe(0)
+                        expect(poker.playerToAct()).toBe(0)
+                    })
+                })
             })
-
-
         })
     })
 })
