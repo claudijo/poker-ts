@@ -1,12 +1,12 @@
 import ChipRange from '../lib/chip-range';
 import { SeatIndex } from 'types/seat-index';
 import { HandRanking } from '../lib/hand';
-declare type Card = {
+export declare type Card = {
     rank: '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'T' | 'J' | 'Q' | 'K' | 'A';
     suit: 'clubs' | 'diamonds' | 'hearts' | 'spades';
 };
-declare type AutomaticAction = 'fold' | 'check/fold' | 'check' | 'call' | 'call any' | 'all-in';
-declare type Action = 'fold' | 'check' | 'call' | 'bet' | 'raise';
+export declare type AutomaticAction = 'fold' | 'check/fold' | 'check' | 'call' | 'call any' | 'all-in';
+export declare type Action = 'fold' | 'check' | 'call' | 'bet' | 'raise';
 export default class Poker {
     private _table;
     constructor(forcedBets: {
@@ -68,4 +68,3 @@ export default class Poker {
     sitDown(seatIndex: number, buyIn: number): void;
     standUp(seatIndex: number): void;
 }
-export {};
