@@ -253,10 +253,17 @@ export default class Dealer {
             const index = this._potManager.pots()[0].eligiblePlayers()[0]
             const player = this._players[index]
             assert(player !== null)
+
+            // // Add one and only player to winners array for consistency
+            // while (this._communityCards.cards().length < 5) {
+            //     this._communityCards.deal([this._deck.draw()])
+            // }
+            //
+            // const winner: [number, Hand, HoleCards] = [index, Hand.create(this._holeCards[index], this._communityCards), this._holeCards[index]]
+            // this._winners.push([winner])
+
             player.addToStack(this._potManager.pots()[0].size())
             return
-
-            // TODO: Also, no reveals in this case. Reveals are only necessary when there is >=2 players.
         }
 
         for (const pot of this._potManager.pots()) {

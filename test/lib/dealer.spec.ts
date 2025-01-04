@@ -386,12 +386,22 @@ describe('Dealer', () => {
                 dealer.actionTaken(Action.FOLD)
                 dealer.actionTaken(Action.FOLD)
                 dealer.endBettingRound()
+                // tslint:disable-next-line:no-console
+                console.log("__________", dealer.pots())
                 dealer.showdown()
             })
 
             test('single winner', () => {
                 expect(dealer.handInProgress()).toBeFalsy()
                 expect(players[0]?.stack()).toBe(1075)
+            })
+
+            test('reveal single winner hand', () => {
+                // const firstWinnerInFirstPot = dealer.winners()[0][0];
+                // const [seatIndex, hand, holeCards] = firstWinnerInFirstPot;
+
+                // tslint:disable-next-line:no-console
+                console.log("winners", dealer.winners());
             })
         })
 
