@@ -4,6 +4,10 @@ Poker-ts is a poker game engine that can be used to serve Texas hold'em games fo
 ## Acknowledgment
 This library is a TypeScript port of the [C++ Poker library](https://github.com/JankoDedic/poker) written by Janko Dedic. Note that minor differences in the API might exist.
 
+## Become a Sponsor
+Consider [making a small donation via Github](https://github.com/sponsors/claudijo?o=esb) if you find my work with this library valuable.
+
+
 ## Example Usage
 Poker-ts exports a `Poker.Table` class that represents a state machine and models a real-world poker table. 
 
@@ -73,7 +77,7 @@ enum HandRanking {
 ### Constructor 
 `Poker.Table(forcedBets: { ante?: number, bigBlind: number, smallBlind: number }, numSeats?: number)`
 
-Creates an instance of the poker table object.
+Creates an instance of the poker table object. The ante (a forced bet in which all players put an equal amount of money or chips into the pot before the deal begins) and specifying the dealer button seat are optional.
 
 ### playerToAct()
 `Poker.Table.prototype.playerToAct(): number`
@@ -83,7 +87,7 @@ Returns the seat index of the player to act. (Betting round must be in progress.
 ### button()
 `Poker.Table.prototype.button(): number`
 
-Returns the seat index of the button. (Hand must be in progress.)
+Returns the seat index of the dealer button. (Hand must be in progress.)
 
 ### seats()
 `Poker.Table.prototype.seats(): ({ totalChips: number, stack: number, betSize: number } | null)[]`
@@ -103,7 +107,9 @@ Returns the number of active players in the active hand. (Hand must be in progre
 ### pots()
 `Poker.Table.prototype.pots(): { size: number, eligiblePlayers: number[] }[]`
 
-Returns the state of all pots in the active hand.
+Returns the state of all pots in the active hand. 
+
+This endpoint can be used prior to calling `showdown()` to check if all but one last eligible player has folded. A single eligible player will win the pot, even though the `winnders()` endpoints returns an empty array under that circumstance.  
 
 ### forcedBets()
 `Poker.Table.prototype.forcedBets(): { ante: number, bigBlind: number, smallBlind: number }`
@@ -125,7 +131,7 @@ Returns the number of seats at the table.
 
 Start a new hand by collecting ante, placing blinds and dealing cards. (Hand must not be in progress and there must be at least two players seated at the table.) 
 
-Optionally set dealer button seat. If seat is invalid, button will be placed at first hand player.
+Optionally set dealer button seat. If seat is invalid, button will be placed at the first hand player.
 
 ### isHandInProgress()
 `Poker.Table.prototype.isHandInProgress(): boolean`
@@ -180,7 +186,11 @@ Perform a showdown. Evaluate the players' hands and pay the winners. (Betting ro
 ### winners()
 `Poker.Table.prototype.winners(): [SeatIndex, { cards: Card[], ranking: HandRanking, strength: number }, Card[]][][]`
 
-Returns the winning hands for each pot after showdown. (Hand must not be in progress.)
+Returns the winner(s) for each pot after showdown. (Hand must not be in progress.)
+
+For each pot, an array entry will contain the seat index of the winner, the winner's hand, including the five winning cards, hand ranking and strength, and the two hole cards of the winner.
+
+Note that the result will be empty if there is one pot with one single eligible player left in the hand. Access the `pots()` before calling `showdown()` to explicitly get the winner if there is only one eligible player left.
 
 ### automaticActions()
 `Poker.Table.prototype.automaticActions(): (AutomaticAction | null)[]`
