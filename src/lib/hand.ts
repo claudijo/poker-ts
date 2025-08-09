@@ -56,12 +56,12 @@ export default class Hand {
     }
 
     static compare(h1: Hand, h2: Hand): number {
-        const rankingDiff = h2.ranking() - h1.ranking()
+        const rankingDiff = h1.ranking() - h2.ranking()
         if (rankingDiff !== 0) {
             return rankingDiff
         }
 
-        return h2.strength() - h1.strength()
+        return h1.strength() - h2.strength()
     }
 
     static nextRank(cards: Card[]): RankInfo {
@@ -177,9 +177,18 @@ export default class Hand {
                 ranking = HandRanking.THREE_OF_A_KIND
             }
         } else if (count === 2) {
-            const tmp = Hand.nextRank(cards.slice(-5))
+            const tmp = Hand.nextRank(cards.slice(count))
             if (tmp.count === 2) {
                 ranking = HandRanking.TWO_PAIR
+                // For two pair, we need to select the best 5 cards:
+                // - First pair (2 cards)
+                // - Second pair (2 cards) 
+                // - Highest remaining card (1 card)
+                const firstPair = cards.slice(0, count)
+                const secondPair = cards.slice(count, count + tmp.count)
+                const remainingCards = cards.slice(count + tmp.count).sort((c1, c2) => c2.rank - c1.rank)
+                const kicker = remainingCards[0]
+                cards = [...firstPair, ...secondPair, kicker]
             } else {
                 ranking = HandRanking.PAIR
             }

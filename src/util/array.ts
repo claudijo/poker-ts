@@ -49,5 +49,5 @@ export function unique<Type>(array:Type[],  predicate:(first: Type, second: Type
 
 export function findMax<Type>(array:Type[], compare:(first: Type, second: Type) => number): Type {
     assert(array.length > 0)
-    return array.sort(compare)[0]
+    return array.sort(compare).reverse()[0]
 }
