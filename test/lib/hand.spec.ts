@@ -154,6 +154,8 @@ describe('Hand', () => {
                 makeCards('Ac Ac Kc Kc 3c 2c 2c'),
                 makeCards('Ac Ah Kc Qh Jc 9h 2c'),
                 makeCards('Ah Kc Qs Jd 9c 8c 7c'),
+
+                makeCards('3s 3d 6c Qc Ad 6s Ac'),
             ]
 
             handCards = [
@@ -169,6 +171,8 @@ describe('Hand', () => {
                 makeCards('Ac Ac Kc Kc 3c'),
                 makeCards('Ac Ah Kc Qh Jc'),
                 makeCards('Ah Kc Qs Jd 9c'),
+
+                makeCards('Ad Ac 6c 6s Qc'),
             ]
         })
 

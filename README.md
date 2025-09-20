@@ -1,5 +1,7 @@
 # Poker (TypeScript)
-Poker-ts is a poker game engine that can be used to serve Texas hold'em games for real players.
+Poker-ts is a poker game engine that can be used to serve Texas hold'em games for real players. 
+
+Chip amounts only support integers. Treat the amounts as cents and do the conversion in the user interface layer if you want to support decimal numbers. 
 
 ## Acknowledgment
 This library is a TypeScript port of the [C++ Poker library](https://github.com/JankoDedic/poker) written by Janko Dedic. Note that minor differences in the API might exist.

@@ -45,11 +45,40 @@ export function shuffleForTwoPlayersWithFullHouseWinner(array: Card[]) {
     cards.forEach((card, index) => array[51 - index] = card)
 }
 
+export function shuffleForTwoPlayersWithTwoPairsAndKickerWinner(array: Card[]) {
+    const cards = makeCards(
+        '3s Qc' + // First player
+        ' 4s Jc' + // Second player
+        ' Ac Ah Kc Kd 2s' // Community cards
+    )
+
+    cards.forEach((card, index) => array[51 - index] = card)
+}
+
+export function shuffleForTwoPlayersWithThreeOfAKindAndKickerWinner(array: Card[]) {
+    const cards = makeCards(
+        '3s Qc' + // First player
+        ' 3c Jc' + // Second player
+        ' 3h 3d Ac 7d 2s' // Community cards
+    )
+
+    cards.forEach((card, index) => array[51 - index] = card)
+}
+
 export function shuffleForTwoPlayersDraw(array: Card[]) {
     const cards = makeCards(
         'Td 9h' + // First player
         ' Th 3c' + // Second player
         ' Qh Qc As Tc 5h' // Community cards
+    )
+    cards.forEach((card, index) => array[51 - index] = card)
+}
+
+export function shuffleForTwoPlayersDrawUsingOnlyCommunityCards(array: Card[]) {
+    const cards = makeCards(
+        'Td Js' + // First player
+        ' 3d 3s' + // Second player
+        ' 6c Qc Ad 6s Ac' // Community cards
     )
     cards.forEach((card, index) => array[51 - index] = card)
 }

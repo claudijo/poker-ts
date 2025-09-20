@@ -183,6 +183,12 @@ var Hand = /** @class */ (function () {
             var tmp = Hand.nextRank(cards.slice(-5));
             if (tmp.count === 2) {
                 ranking = HandRanking.TWO_PAIR;
+                // Select best 5 cards: two highest pairs + highest kicker
+                var firstPair = cards.slice(0, count);
+                var secondPair = cards.slice(count, count + tmp.count);
+                var remainingCards = cards.slice(count + tmp.count).sort(function (c1, c2) { return c2.rank - c1.rank; });
+                var kicker = remainingCards[0];
+                cards = __spreadArray(__spreadArray(__spreadArray([], firstPair), secondPair), [kicker]);
             }
             else {
                 ranking = HandRanking.PAIR;

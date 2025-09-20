@@ -180,6 +180,12 @@ export default class Hand {
             const tmp = Hand.nextRank(cards.slice(-5))
             if (tmp.count === 2) {
                 ranking = HandRanking.TWO_PAIR
+                // Select best 5 cards: two highest pairs + highest kicker
+                const firstPair = cards.slice(0, count)
+                const secondPair = cards.slice(count, count + tmp.count)
+                const remainingCards = cards.slice(count + tmp.count).sort((c1, c2) => c2.rank - c1.rank)
+                const kicker = remainingCards[0]
+                cards = [...firstPair, ...secondPair, kicker]
             } else {
                 ranking = HandRanking.PAIR
             }

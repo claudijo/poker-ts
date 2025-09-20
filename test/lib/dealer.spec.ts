@@ -6,9 +6,10 @@ import {SeatArray} from '../../src/types/seat-array'
 import Player from '../../src/lib/player'
 import Card, {CardRank, CardSuit} from '../../src/lib/card'
 import {
+    shuffleForTwoPlayersWithThreeOfAKindAndKickerWinner,
     shuffleForThreePlayersWithTwoWinners,
-    shuffleForTwoPlayersDraw,
-    shuffleForTwoPlayersWithFullHouseWinner,
+    shuffleForTwoPlayersDraw, shuffleForTwoPlayersDrawUsingOnlyCommunityCards,
+    shuffleForTwoPlayersWithFullHouseWinner, shuffleForTwoPlayersWithTwoPairsAndKickerWinner,
 } from '../helper/card'
 import {HandRanking} from '../../src/lib/hand'
 
@@ -464,6 +465,111 @@ describe('Dealer', () => {
             })
         })
 
+        describe('single three of a kind winner with help from kicker after full round', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
+            beforeEach(() => {
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck(shuffleForTwoPlayersWithThreeOfAKindAndKickerWinner)
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(1000)
+                players[1] = new Player(1000)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+
+                dealer.startHand()
+
+                dealer.actionTaken(Action.RAISE, 500)
+                dealer.actionTaken(Action.CALL)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.showdown()
+            })
+
+            test('pot has been divided', () => {
+                expect(players[0]?.stack()).toBe(1500)
+                expect(players[1]?.stack()).toBe(500)
+            })
+        })
+
+        describe('single two pairs winner with help from kicker after full round', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
+            beforeEach(() => {
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck(shuffleForTwoPlayersWithTwoPairsAndKickerWinner)
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(1000)
+                players[1] = new Player(1000)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+
+                dealer.startHand()
+
+                dealer.actionTaken(Action.RAISE, 500)
+                dealer.actionTaken(Action.CALL)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.showdown()
+            })
+
+            test('pot has been divided', () => {
+                expect(players[0]?.stack()).toBe(1500)
+                expect(players[1]?.stack()).toBe(500)
+            })
+
+            test('reveal winner hand', () => {
+                const firstWinnerInFirstPot = dealer.winners()[0][0];
+                const [seatIndex, hand, holeCards] = firstWinnerInFirstPot;
+                expect(seatIndex).toBe(0)
+                expect(hand.ranking()).toBe(HandRanking.TWO_PAIR)
+                expect(hand.strength()).toBe(368589)
+                expect(hand.cards()).toEqual([
+                    new Card(12, 0),
+                    new Card(12, 2),
+                    new Card(11, 0),
+                    new Card(11, 1),
+                    new Card(10, 0),
+                ])
+                expect(holeCards).toEqual([
+                    new Card(1, 3),
+                    new Card(10, 0),
+                ])
+            })
+        });
+
         describe('single winner with full house after full round', () => {
             let forcedBets: ForcedBets
             let deck: Deck
@@ -526,7 +632,7 @@ describe('Dealer', () => {
             })
         })
 
-        describe('all players winners', () => {
+        describe('all players winners using community cards and hole cards', () => {
             let forcedBets: ForcedBets
             let deck: Deck
             let communityCards: CommunityCards
@@ -562,6 +668,49 @@ describe('Dealer', () => {
 
                 dealer.showdown()
             })
+
+            test('pot has been divided equally', () => {
+                expect(players[0]?.stack()).toBe(1000)
+                expect(players[1]?.stack()).toBe(1000)
+            })
+        })
+
+        describe('all players winners using only community cards', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
+            beforeEach(() => {
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck(shuffleForTwoPlayersDrawUsingOnlyCommunityCards)
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(1000)
+                players[1] = new Player(1000)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+
+                dealer.startHand()
+
+                dealer.actionTaken(Action.RAISE, 500)
+                dealer.actionTaken(Action.CALL)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+
+                dealer.showdown()
+            });
 
             test('pot has been divided equally', () => {
                 expect(players[0]?.stack()).toBe(1000)
