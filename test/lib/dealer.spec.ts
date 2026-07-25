@@ -10,6 +10,7 @@ import {
     shuffleForThreePlayersWithTwoWinners,
     shuffleForTwoPlayersDraw, shuffleForTwoPlayersDrawUsingOnlyCommunityCards,
     shuffleForTwoPlayersWithFullHouseWinner, shuffleForTwoPlayersWithTwoPairsAndKickerWinner,
+    shuffleForThreePlayersWithAllInFirstPlayerWinning,
 } from '../helper/card'
 import {HandRanking} from '../../src/lib/hand'
 
@@ -830,6 +831,110 @@ describe('Dealer', () => {
                 expect(() => {
                     dealer.startHand()
                 }).not.toThrow()
+            })
+        })
+
+        describe('all-in player wins at showdown', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
+            beforeEach(() => {
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck(shuffleForThreePlayersWithAllInFirstPlayerWinning)
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(100)
+                players[1] = new Player(1000)
+                players[2] = new Player(1000)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+
+                dealer.startHand()
+                // Preflop: the short stack moves all in and both opponents call.
+                dealer.actionTaken(Action.RAISE, 100)
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.CALL)
+                dealer.endBettingRound()
+                // Flop, turn and river are checked down by the two live players.
+                for (const _ of [RoundOfBetting.FLOP, RoundOfBetting.TURN, RoundOfBetting.RIVER]) {
+                    dealer.actionTaken(Action.CHECK)
+                    dealer.actionTaken(Action.CHECK)
+                    dealer.endBettingRound()
+                }
+                dealer.showdown()
+            })
+
+            test('the all-in winner is paid the pot', () => {
+                expect(players[0]?.stack()).toBe(300)
+            })
+
+            test('no chips leave the table', () => {
+                const total = players.reduce((sum, player) => sum + (player?.totalChips() ?? 0), 0)
+                expect(total).toBe(2100)
+            })
+        })
+
+        describe('betting continues around an all-in player', () => {
+            let forcedBets: ForcedBets
+            let deck: Deck
+            let communityCards: CommunityCards
+            let players: SeatArray
+            let dealer: Dealer
+
+            beforeEach(() => {
+                forcedBets = { blinds: { big: 50, small: 25 } }
+                deck = new Deck(shuffleForThreePlayersWithAllInFirstPlayerWinning)
+                communityCards = new CommunityCards()
+                players = new Array(9).fill(null)
+                players[0] = new Player(100)
+                players[1] = new Player(1000)
+                players[2] = new Player(1000)
+                dealer = new Dealer(players, 0, forcedBets, deck, communityCards)
+
+                dealer.startHand()
+                // Preflop: the short stack moves all in and is called by both opponents.
+                dealer.actionTaken(Action.RAISE, 100)
+                dealer.actionTaken(Action.CALL)
+                dealer.actionTaken(Action.CALL)
+                dealer.endBettingRound()
+                // Flop: the two live players keep betting, which the all-in player
+                // cannot match, so it has to form a side pot.
+                dealer.actionTaken(Action.BET, 200)
+                dealer.actionTaken(Action.CALL)
+                dealer.endBettingRound()
+            })
+
+            test('a side pot is opened that the all-in player is not eligible for', () => {
+                expect(dealer.pots().map(pot => [pot.size(), pot.eligiblePlayers()])).toEqual([
+                    [300, [0, 1, 2]],
+                    [400, [1, 2]],
+                ])
+            })
+
+            test('folding forfeits eligibility for every pot, not just the newest one', () => {
+                // Seat 2 folds on the turn, by which point the side pot already exists.
+                dealer.actionTaken(Action.BET, 200)
+                dealer.actionTaken(Action.FOLD)
+
+                dealer.pots().forEach(pot => {
+                    expect(pot.eligiblePlayers()).not.toContain(2)
+                })
+            })
+
+            test('the all-in player wins the main pot and the side pot is settled separately', () => {
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+                dealer.actionTaken(Action.CHECK)
+                dealer.actionTaken(Action.CHECK)
+                dealer.endBettingRound()
+                dealer.showdown()
+
+                expect(players[0]?.stack()).toBe(300)
+                const total = players.reduce((sum, player) => sum + (player?.totalChips() ?? 0), 0)
+                expect(total).toBe(2100)
             })
         })
     })

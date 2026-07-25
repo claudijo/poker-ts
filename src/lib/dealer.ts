@@ -43,6 +43,12 @@ export default class Dealer {
     private readonly _communityCards: CommunityCards
     private readonly _holeCards: HoleCards[]
     private _players: SeatArray
+    // Everyone dealt into the hand, minus anyone who has folded. `_players` is
+    // re-bound at the end of every betting round to the players who can still act,
+    // which excludes anyone who is all in. Pot collection, pot eligibility and
+    // showdown payouts must all still account for all-in players, so they work from
+    // this array rather than from `_players`.
+    private _handPlayers: SeatArray = []
     private _bettingRound: BettingRound | null = null
     private _forcedBets: ForcedBets
     private _deck: Deck
@@ -181,6 +187,7 @@ export default class Dealer {
         const bigBlindSeat = this.postBlinds()
         const firstAction = this.nextOrWrap(bigBlindSeat)
         this.dealHoleCards()
+        this._handPlayers = [...this._players]
         if (this._players.filter((player, seat) => player !== null && (player.stack() !== 0 || seat === bigBlindSeat)).length > 1) {
             this._bettingRound = new BettingRound([...this._players], firstAction, this._forcedBets.blinds.big, this._forcedBets.blinds.big)
         }
@@ -201,7 +208,9 @@ export default class Dealer {
             const foldingPlayer = this._players[this.playerToAct()]
             assert(foldingPlayer !== null)
             this._potManager.betFolded(foldingPlayer.betSize())
+            this._potManager.playerFolded(this.playerToAct())
             foldingPlayer.takeFromBet(foldingPlayer.betSize())
+            this._handPlayers[this.playerToAct()] = null
             this._players[this.playerToAct()] = null
             this._bettingRound.actionTaken(BettingRoundAction.LEAVE)
         }
@@ -211,7 +220,7 @@ export default class Dealer {
         assert(!this._bettingRoundsCompleted, 'Betting rounds must not be completed')
         assert(!this.bettingRoundInProgress(), 'Betting round must not be in progress')
 
-        this._potManager.collectBetsForm(this._players)
+        this._potManager.collectBetsForm(this._handPlayers)
         if ((this._bettingRound?.numActivePlayers() ?? 0) <= 1) {
             this._roundOfBetting = RoundOfBetting.RIVER
             // If there is only one pot, and there is only one player in it...
@@ -251,7 +260,7 @@ export default class Dealer {
         if (this._potManager.pots().length === 1 && this._potManager.pots()[0].eligiblePlayers().length === 1) {
             // No need to evaluate the hand. There is only one player.
             const index = this._potManager.pots()[0].eligiblePlayers()[0]
-            const player = this._players[index]
+            const player = this._handPlayers[index]
             assert(player !== null)
             player.addToStack(this._potManager.pots()[0].size())
             return
@@ -276,7 +285,7 @@ export default class Dealer {
 
             winningPlayerResults.forEach((playerResult: [SeatIndex, Hand]) => {
                 const [seatIndex] = playerResult
-                this._players[seatIndex]?.addToStack(payout)
+                this._handPlayers[seatIndex]?.addToStack(payout)
             })
 
             this._winners.push(winningPlayerResults.map((playerResult: [SeatIndex, Hand]) => {
@@ -288,10 +297,10 @@ export default class Dealer {
 
             if (oddChips !== 0) {
                 // Distribute the odd chips to the first players, counting clockwise, after the dealer button
-                const winners: SeatArray = new Array(this._players.length).fill(null)
+                const winners: SeatArray = new Array(this._handPlayers.length).fill(null)
                 winningPlayerResults.forEach((playerResult: [SeatIndex, Hand]) => {
                     const [seatIndex] = playerResult
-                    winners[seatIndex] = this._players[seatIndex]
+                    winners[seatIndex] = this._handPlayers[seatIndex]
                 })
 
                 let seat = this._button
