@@ -6,6 +6,7 @@ export default class Pot {
     private _size;
     size(): Chips;
     eligiblePlayers(): SeatIndex[];
+    removeEligiblePlayer(seat: SeatIndex): void;
     add(amount: Chips): void;
     collectBetsFrom(players: SeatArray): Chips;
 }

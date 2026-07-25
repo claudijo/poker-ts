@@ -82,3 +82,13 @@ export function shuffleForTwoPlayersDrawUsingOnlyCommunityCards(array: Card[]) {
     )
     cards.forEach((card, index) => array[51 - index] = card)
 }
+
+export function shuffleForThreePlayersWithAllInFirstPlayerWinning(array: Card[]) {
+    const cards = makeCards(
+        'Ac Ah' + // First player, who is all in and holds the winning hand
+        ' Kc 5h' + // Second player
+        ' Qc 6h' + // Third player
+        ' As 2c 7d 9s Js' // Community cards
+    )
+    cards.forEach((card, index) => array[51 - index] = card)
+}

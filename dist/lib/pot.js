@@ -15,6 +15,9 @@ var Pot = /** @class */ (function () {
     Pot.prototype.eligiblePlayers = function () {
         return this._eligiblePlayers;
     };
+    Pot.prototype.removeEligiblePlayer = function (seat) {
+        this._eligiblePlayers = this._eligiblePlayers.filter(function (index) { return index !== seat; });
+    };
     Pot.prototype.add = function (amount) {
         assert_1.default(amount >= 0, 'Cannot add a negative amount to the pot');
         this._size += amount;
@@ -27,11 +30,18 @@ var Pot = /** @class */ (function () {
             // If no players have bet, just make all the players who are still in the pot eligible.
             // It is possible that some player has folded even if nobody has bet.
             // We would not want to keep him as an eligible player.
-            this._eligiblePlayers = players.reduce(function (acc, player, index) {
-                if (player !== null)
-                    acc.push(index);
-                return acc;
-            }, []);
+            //
+            // Once this pot has eligible players we only ever drop the ones who have
+            // folded. Rebuilding the list from scratch would silently discard anyone
+            // who is already all in, since they are no longer among the players still
+            // being dealt into betting rounds — and they would lose a pot they paid for.
+            this._eligiblePlayers = this._eligiblePlayers.length !== 0
+                ? this._eligiblePlayers.filter(function (index) { return players[index] !== null && players[index] !== undefined; })
+                : players.reduce(function (acc, player, index) {
+                    if (player !== null)
+                        acc.push(index);
+                    return acc;
+                }, []);
             return 0;
         }
         else {

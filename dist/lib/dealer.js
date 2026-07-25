@@ -62,6 +62,12 @@ var Dealer = /** @class */ (function () {
     function Dealer(players, button, forcedBets, deck, communityCards, numSeats) {
         if (numSeats === void 0) { numSeats = 9; }
         this._button = 0;
+        // Everyone dealt into the hand, minus anyone who has folded. `_players` is
+        // re-bound at the end of every betting round to the players who can still act,
+        // which excludes anyone who is all in. Pot collection, pot eligibility and
+        // showdown payouts must all still account for all-in players, so they work from
+        // this array rather than from `_players`.
+        this._handPlayers = [];
         this._bettingRound = null;
         this._handInProgress = false;
         this._roundOfBetting = community_cards_1.RoundOfBetting.PREFLOP;
@@ -180,6 +186,7 @@ var Dealer = /** @class */ (function () {
         var bigBlindSeat = this.postBlinds();
         var firstAction = this.nextOrWrap(bigBlindSeat);
         this.dealHoleCards();
+        this._handPlayers = __spreadArray([], this._players);
         if (this._players.filter(function (player, seat) { return player !== null && (player.stack() !== 0 || seat === bigBlindSeat); }).length > 1) {
             this._bettingRound = new betting_round_1.default(__spreadArray([], this._players), firstAction, this._forcedBets.blinds.big, this._forcedBets.blinds.big);
         }
@@ -200,7 +207,9 @@ var Dealer = /** @class */ (function () {
             var foldingPlayer = this._players[this.playerToAct()];
             assert_1.default(foldingPlayer !== null);
             this._potManager.betFolded(foldingPlayer.betSize());
+            this._potManager.playerFolded(this.playerToAct());
             foldingPlayer.takeFromBet(foldingPlayer.betSize());
+            this._handPlayers[this.playerToAct()] = null;
             this._players[this.playerToAct()] = null;
             this._bettingRound.actionTaken(betting_round_1.Action.LEAVE);
         }
@@ -209,7 +218,7 @@ var Dealer = /** @class */ (function () {
         var _a, _b, _c, _d;
         assert_1.default(!this._bettingRoundsCompleted, 'Betting rounds must not be completed');
         assert_1.default(!this.bettingRoundInProgress(), 'Betting round must not be in progress');
-        this._potManager.collectBetsForm(this._players);
+        this._potManager.collectBetsForm(this._handPlayers);
         if (((_b = (_a = this._bettingRound) === null || _a === void 0 ? void 0 : _a.numActivePlayers()) !== null && _b !== void 0 ? _b : 0) <= 1) {
             this._roundOfBetting = community_cards_1.RoundOfBetting.RIVER;
             // If there is only one pot, and there is only one player in it...
@@ -249,7 +258,7 @@ var Dealer = /** @class */ (function () {
         if (this._potManager.pots().length === 1 && this._potManager.pots()[0].eligiblePlayers().length === 1) {
             // No need to evaluate the hand. There is only one player.
             var index = this._potManager.pots()[0].eligiblePlayers()[0];
-            var player = this._players[index];
+            var player = this._handPlayers[index];
             assert_1.default(player !== null);
             player.addToStack(this._potManager.pots()[0].size());
             return;
@@ -276,7 +285,7 @@ var Dealer = /** @class */ (function () {
             winningPlayerResults.forEach(function (playerResult) {
                 var _a;
                 var seatIndex = playerResult[0];
-                (_a = _this._players[seatIndex]) === null || _a === void 0 ? void 0 : _a.addToStack(payout);
+                (_a = _this._handPlayers[seatIndex]) === null || _a === void 0 ? void 0 : _a.addToStack(payout);
             });
             this_1._winners.push(winningPlayerResults.map(function (playerResult) {
                 var seatIndex = playerResult[0];
@@ -285,10 +294,10 @@ var Dealer = /** @class */ (function () {
             }));
             if (oddChips !== 0) {
                 // Distribute the odd chips to the first players, counting clockwise, after the dealer button
-                var winners_1 = new Array(this_1._players.length).fill(null);
+                var winners_1 = new Array(this_1._handPlayers.length).fill(null);
                 winningPlayerResults.forEach(function (playerResult) {
                     var seatIndex = playerResult[0];
-                    winners_1[seatIndex] = _this._players[seatIndex];
+                    winners_1[seatIndex] = _this._handPlayers[seatIndex];
                 });
                 var seat = this_1._button;
                 while (oddChips !== 0) {
